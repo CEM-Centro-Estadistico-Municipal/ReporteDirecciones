@@ -36,7 +36,12 @@ h1{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
 .cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:30px}
 @media(max-width:820px){.cifras{grid-template-columns:repeat(2,1fr)}}
 .cifra{background:var(--carta);border:1px solid var(--gris-200);border-radius:var(--r);
-  border-top:3px solid var(--azul);padding:15px 16px 16px}
+  border-top:3px solid var(--azul);padding:14px 15px 15px;text-align:left;
+  font-family:inherit;cursor:pointer;transition:.15s;width:100%}
+.cifra:hover{box-shadow:0 3px 12px rgba(18,64,107,.10);transform:translateY(-1px)}
+.cifra.on{box-shadow:0 0 0 2px var(--azul) inset}
+.cifra.rojo.on{box-shadow:0 0 0 2px var(--rojo) inset}
+.cifra.ambar.on{box-shadow:0 0 0 2px var(--ambar) inset}
 .cifra.rojo{border-top-color:var(--rojo)}
 .cifra.ambar{border-top-color:var(--ambar)}
 .cifra.verde{border-top-color:var(--verde)}
@@ -88,7 +93,7 @@ td.cel{text-align:center;padding:6px 4px}
 
 .celda{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
   width:58px;height:40px;border-radius:6px;font-family:'IBM Plex Mono',monospace;
-  font-size:14px;font-weight:600;line-height:1;cursor:default;position:relative}
+  font-size:14px;font-weight:600;line-height:1;position:relative}
 .celda small{font-size:9px;font-weight:500;opacity:.78;margin-top:2px;letter-spacing:.03em}
 .c-ok{background:var(--verde-100);color:var(--verde)}
 .c-tarde{background:var(--ambar-100);color:var(--ambar)}
@@ -129,9 +134,68 @@ td.racha{text-align:center;width:82px;font-family:'IBM Plex Mono',monospace;font
 .tr-meta b{color:var(--tinta);font-weight:600}
 
 /* ---------- varios ---------- */
-.demo{background:var(--ocre-100);border:1px solid #e8d5a8;border-radius:var(--r);
-  padding:13px 16px;font-size:13.5px;margin-bottom:24px;line-height:1.5}
-.demo b{display:block;margin-bottom:2px;color:var(--ocre)}
+/* ---------- pestañas ---------- */
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1.5px solid var(--gris-200);overflow-x:auto}
+.tab{background:none;border:none;font-family:inherit;font-size:14.5px;font-weight:600;
+  color:var(--gris);padding:9px 16px;cursor:pointer;border-bottom:2.5px solid transparent;
+  margin-bottom:-1.5px;transition:.15s;white-space:nowrap}
+.tab:hover{color:var(--azul)}
+.tab.on{color:var(--azul);border-bottom-color:var(--azul)}
+.tab .n{font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:var(--gris-100);
+  color:var(--gris);padding:1px 6px;border-radius:99px;margin-left:6px}
+.tab.on .n{background:var(--azul-100);color:var(--azul)}
+
+/* ---------- filtros ---------- */
+.filtros{background:var(--carta);border:1px solid var(--gris-200);border-radius:var(--r);
+  padding:13px 15px;margin-bottom:22px}
+.f-fila{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.f-fila + .f-fila{margin-top:11px;padding-top:11px;border-top:1px solid var(--gris-100)}
+.f-lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gris);font-weight:600;margin-right:2px}
+select,input[type=text]{font-family:inherit;font-size:14px;color:var(--tinta);background:#fff;
+  border:1px solid var(--gris-200);border-radius:7px;padding:7px 10px;max-width:100%}
+select:focus,input:focus{outline:none;border-color:var(--azul-600);box-shadow:0 0 0 3px var(--azul-100)}
+input[type=text]{min-width:180px}
+.chip{background:#fff;border:1px solid var(--gris-200);border-radius:99px;font-family:inherit;
+  font-size:13px;font-weight:600;color:var(--gris);padding:6px 13px;cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--azul);color:var(--azul)}
+.chip.on{background:var(--azul);border-color:var(--azul);color:#fff}
+.chip.on.r{background:var(--rojo);border-color:var(--rojo)}
+.chip.on.a{background:var(--ambar);border-color:var(--ambar)}
+.limpiar{background:none;border:none;font-family:inherit;font-size:13px;color:var(--azul);
+  cursor:pointer;text-decoration:underline;padding:6px 4px;margin-left:auto}
+
+/* ---------- grupos colapsables ---------- */
+.grupo{margin-bottom:14px}
+.g-cab{display:flex;align-items:center;gap:9px;width:100%;background:var(--carta);
+  border:1px solid var(--gris-200);border-radius:var(--r);padding:11px 15px;
+  font-family:inherit;cursor:pointer;text-align:left;transition:.15s}
+.g-cab:hover{border-color:var(--azul)}
+.g-cab.abierto{border-radius:var(--r) var(--r) 0 0;border-bottom-color:var(--gris-100)}
+.g-marca{width:4px;height:24px;border-radius:99px;flex-shrink:0}
+.g-marca.r{background:var(--rojo)} .g-marca.a{background:var(--ambar)}
+.g-txt{flex:1;min-width:0}
+.g-tit{display:block;font-size:14.5px;font-weight:600;line-height:1.3}
+.g-sub{display:block;font-size:12.5px;color:var(--gris);margin-top:1px}
+.g-n{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--gris)}
+.g-fl{font-size:11px;color:var(--gris);transition:transform .18s}
+.g-cab.abierto .g-fl{transform:rotate(90deg)}
+.g-cuerpo{border:1px solid var(--gris-200);border-top:none;border-radius:0 0 var(--r) var(--r);
+  background:var(--carta);overflow:hidden}
+.at-sec{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gris);margin-bottom:2px}
+.at-marca.g{background:var(--gris-200)}
+
+/* ---------- celda previa al sistema ---------- */
+.c-previo{background:transparent;color:#c9c3b8}
+
+/* ---------- notas ---------- */
+.nota{border-radius:var(--r);padding:13px 16px;font-size:13.5px;margin-bottom:20px;line-height:1.5}
+.nota.ocre{background:var(--ocre-100);border:1px solid #e8d5a8}
+.nota.azul{background:var(--azul-100);border:1px solid #c9dcea}
+.nota b{display:block;margin-bottom:2px}
+.nota.ocre b{color:var(--ocre)} .nota.azul b{color:var(--azul)}
+.oculto{display:none!important}
 .vacio{text-align:center;padding:34px 20px;color:var(--gris);font-size:14px;
   background:var(--carta);border:1px solid var(--gris-200);border-radius:var(--r)}
 footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
@@ -149,51 +213,83 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
 </header>
 
 <div class="wrap">
-  <div id="demo-aviso" class="demo" style="display:none">
+  <div id="nota-demo" class="nota ocre" style="display:none">
     <b>Datos de demostración</b>
     No se pudo leer la planilla, así que lo que se ve son datos simulados. Suele pasar si
-    todavía no se ejecutó el <code>setup()</code>, si la implementación no está publicada
-    con acceso "Cualquier usuario", o si el código se modificó sin crear una versión nueva.
+    la implementación no está publicada con acceso "Cualquier usuario", o si el código se
+    modificó sin crear una versión nueva.
+  </div>
+  <div id="nota-inicio" class="nota azul" style="display:none"></div>
+
+  <div class="tabs">
+    <button class="tab on" data-v="resumen">Resumen</button>
+    <button class="tab" data-v="matriz">Matriz de cumplimiento</button>
+    <button class="tab" data-v="trabas">Trabas abiertas <span class="n" id="tab-tr">0</span></button>
   </div>
 
-  <!-- CIFRAS -->
-  <div class="cifras" id="cifras"></div>
-
-  <!-- ATENCIÓN -->
-  <section>
-    <div class="stit"><h2>Requiere atención del liderazgo</h2><span class="cnt" id="c-at">0</span></div>
-    <div class="sdesc">Ordenado por urgencia. Cada línea es una conversación pendiente
-      del secretario correspondiente o de Coordinación General.</div>
-    <div id="atencion"></div>
-  </section>
-
-  <!-- MATRIZ -->
-  <section>
-    <div class="stit"><h2>Matriz de cumplimiento</h2></div>
-    <div class="sdesc">El número grande es la cantidad de acciones informadas en el período.
-      El color indica únicamente si el reporte llegó y cuándo — no evalúa el contenido.
-      El punto rojo señala trabas de criticidad alta.</div>
-    <div class="matriz-cont">
-      <table id="matriz"><thead id="m-head"></thead><tbody id="m-body"></tbody></table>
-      <div class="refs">
-        <div><span class="sw" style="background:var(--verde-100);border:1px solid var(--verde)"></span> En término</div>
-        <div><span class="sw" style="background:var(--ambar-100);border:1px solid var(--ambar)"></span> Fuera de término</div>
-        <div><span class="sw" style="background:#fff;border:1.5px dashed var(--gris-200)"></span> Reportó sin novedades</div>
-        <div><span class="sw" style="background:var(--rojo-100);border:1px solid var(--rojo)"></span> Sin reporte</div>
-        <div><span class="sw" style="background:var(--gris-100);border:1px solid var(--gris-200)"></span> Ventana abierta</div>
-        <div><span class="sw" style="background:var(--rojo);border-radius:50%;width:9px;height:9px"></span> Traba crítica</div>
-      </div>
+  <div class="filtros">
+    <div class="f-fila">
+      <span class="f-lbl">Filtrar</span>
+      <select id="f-sec"><option value="">Todas las secretarías</option></select>
+      <select id="f-est">
+        <option value="">Cualquier estado</option>
+        <option value="reporto">Reportó el período en curso</option>
+        <option value="falta">No reportó el período en curso</option>
+        <option value="tarde">Reportó fuera de término</option>
+        <option value="sinnov">Reportó sin novedades</option>
+      </select>
+      <input type="text" id="f-txt" placeholder="Buscar dirección o referente…">
+      <button class="limpiar" id="f-clr">Limpiar filtros</button>
     </div>
-  </section>
+    <div class="f-fila">
+      <span class="f-lbl">Foco</span>
+      <button class="chip on" data-foco="">Todo</button>
+      <button class="chip r" data-foco="mudas">Silencio sostenido</button>
+      <button class="chip a" data-foco="frias">Sin novedades sostenido</button>
+      <button class="chip r" data-foco="criticas">Con traba crítica</button>
+      <button class="chip a" data-foco="falta">Falta el período en curso</button>
+    </div>
+  </div>
 
-  <!-- TRABAS -->
-  <section>
-    <div class="stit"><h2>Trabas abiertas</h2><span class="cnt" id="c-tr">0</span></div>
-    <div class="sdesc">Lo que las direcciones declaran que las está frenando.
-      Es el insumo directo del trabajo de destrabe: cada ítem tiene un pedido concreto
-      y un responsable posible.</div>
-    <div id="trabas"></div>
-  </section>
+  <div id="v-resumen">
+    <div class="cifras" id="cifras"></div>
+    <section>
+      <div class="stit"><h2>Requiere atención del liderazgo</h2><span class="cnt" id="c-at">0</span></div>
+      <div class="sdesc">Agrupado por tipo de señal y ordenado por urgencia. Tocá cada grupo
+        para desplegarlo o cerrarlo.</div>
+      <div id="atencion"></div>
+    </section>
+  </div>
+
+  <div id="v-matriz" class="oculto">
+    <section>
+      <div class="stit"><h2>Matriz de cumplimiento</h2><span class="cnt" id="c-mx">0</span></div>
+      <div class="sdesc">El número grande es la cantidad de acciones informadas en el período.
+        El color indica únicamente si el reporte llegó y cuándo — no evalúa el contenido.
+        El punto rojo señala trabas de criticidad alta.</div>
+      <div class="matriz-cont">
+        <table id="matriz"><thead id="m-head"></thead><tbody id="m-body"></tbody></table>
+        <div class="refs">
+          <div><span class="sw" style="background:var(--verde-100);border:1px solid var(--verde)"></span> En término</div>
+          <div><span class="sw" style="background:var(--ambar-100);border:1px solid var(--ambar)"></span> Fuera de término</div>
+          <div><span class="sw" style="background:#fff;border:1.5px dashed var(--gris-200)"></span> Reportó sin novedades</div>
+          <div><span class="sw" style="background:var(--rojo-100);border:1px solid var(--rojo)"></span> Sin reporte</div>
+          <div><span class="sw" style="background:var(--gris-100);border:1px solid var(--gris-200)"></span> Ventana abierta</div>
+          <div><span class="sw" style="background:transparent;border:1px dashed #d8d2c6"></span> Previo al sistema</div>
+          <div><span class="sw" style="background:var(--rojo);border-radius:50%;width:9px;height:9px"></span> Traba crítica</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="v-trabas" class="oculto">
+    <section>
+      <div class="stit"><h2>Trabas abiertas</h2><span class="cnt" id="c-tr">0</span></div>
+      <div class="sdesc">Lo que las direcciones declaran que las está frenando. Cada ítem tiene
+        un pedido concreto y un responsable posible. Se cierran poniendo CERRADA en la hoja Trabas.</div>
+      <div id="trabas"></div>
+    </section>
+  </div>
 
   <footer class="wrap" style="padding:20px 0 0">
     Centro Estadístico Municipal · Secretaría de Coordinación General · Municipalidad de Esquina<br>
@@ -210,119 +306,227 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
 const API_URL = "https://script.google.com/macros/s/AKfycbyOM3bpN2yuS6dV2kp0FkC-qpoot6hdhUU1raoPjx7k8Hr3JlzOoliG0RxxcU7CIkahZw/exec";
 const N_PERIODOS = 6;
 
-/* ---------- carga ---------- */
+/* Primer período en que el sistema estuvo vigente. Los anteriores no se cuentan
+   como incumplimiento: el área no tenía cómo reportar. Formato AAAA-MM-Qn.     */
+const PERIODO_INICIO = "2026-08-Q1";
+
+let DATOS = null, vista = "resumen", foco = "";
+
 (async function(){
-  let data = null;
+  let d = null;
   if (API_URL) {
-    try {
-      const r = await fetch(API_URL + "?api=tablero&periodos=" + N_PERIODOS);
-      data = await r.json();
-    } catch(e){ console.warn("Backend no disponible, usando demo:", e); }
+    try { d = await (await fetch(API_URL + "?api=tablero&periodos=" + N_PERIODOS)).json(); }
+    catch(e){ console.warn("Backend no disponible:", e); }
   }
-  if (!data || !data.ok) {
-    data = generarDemo();
-    document.getElementById("demo-aviso").style.display = "block";
-  }
-  pintar(data);
+  if (!d || !d.ok) { d = generarDemo(); document.getElementById("nota-demo").style.display = "block"; }
+  DATOS = preparar(d);
+  montarControles();
+  render();
 })();
 
-/* ---------- render ---------- */
-function pintar(d){
-  const actual = d.periodos[0];
-  document.getElementById("h-periodo").textContent = actual.corto;
+/* Marca como "previo" lo anterior al inicio del sistema y recalcula rachas
+   ignorándolo, para no contar como falta lo que nunca se pidió. */
+function preparar(d){
+  d.periodos.forEach(p => p.previo = p.id < PERIODO_INICIO);
+  d.vigentes = d.periodos.filter(p => !p.previo).length;
+  d.filas.forEach(f => {
+    f.celdas.forEach((c, i) => { if (d.periodos[i].previo) c.estado = "previo"; });
+    let rSR = 0, rSN = 0, cA = false, cB = false;
+    f.celdas.forEach(c => {
+      if (c.estado === "pendiente" || c.estado === "previo") return;
+      if (!cA){ if (c.estado === "sin_reporte") rSR++; else cA = true; }
+      if (!cB){ if (c.estado === "sin_reporte" || c.sinNovedades) rSN++; else cB = true; }
+    });
+    f.rachaSinReporte = rSR; f.rachaSinNovedad = rSN;
+  });
+  return d;
+}
+
+function montarControles(){
+  const sel = document.getElementById("f-sec");
+  [...new Set(DATOS.filas.map(f => f.secretaria))].forEach(x => {
+    const o = document.createElement("option");
+    o.value = x; o.textContent = x === "Intendencia" ? "Intendencia" : "Secretaría de " + x;
+    sel.appendChild(o);
+  });
+  document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+    vista = t.dataset.v;
+    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === t));
+    ["resumen","matriz","trabas"].forEach(v =>
+      document.getElementById("v-" + v).classList.toggle("oculto", v !== vista));
+    render();
+  });
+  document.querySelectorAll(".chip").forEach(c => c.onclick = () => {
+    foco = (foco === c.dataset.foco) ? "" : c.dataset.foco; sincro(); render();
+  });
+  ["f-sec","f-est"].forEach(id => document.getElementById(id).onchange = render);
+  document.getElementById("f-txt").oninput = render;
+  document.getElementById("f-clr").onclick = () => {
+    ["f-sec","f-est","f-txt"].forEach(id => document.getElementById(id).value = "");
+    foco = ""; sincro(); render();
+  };
+}
+function sincro(){
+  document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c.dataset.foco === foco));
+}
+
+function filtrar(){
+  const sec = document.getElementById("f-sec").value;
+  const est = document.getElementById("f-est").value;
+  const txt = document.getElementById("f-txt").value.trim().toLowerCase();
+  return DATOS.filas.filter(f => {
+    if (sec && f.secretaria !== sec) return false;
+    if (txt && !(f.direccion.toLowerCase().includes(txt) ||
+                 (f.referente || "").toLowerCase().includes(txt))) return false;
+    const c = f.celdas[0], e = c.estado;
+    if (est === "reporto" && !["en_termino","tarde"].includes(e)) return false;
+    if (est === "falta"   && e !== "sin_reporte") return false;
+    if (est === "tarde"   && e !== "tarde") return false;
+    if (est === "sinnov"  && !c.sinNovedades) return false;
+    if (foco === "mudas"    && f.rachaSinReporte < 2) return false;
+    if (foco === "frias"    && f.rachaSinNovedad < 3) return false;
+    if (foco === "falta"    && e !== "sin_reporte") return false;
+    if (foco === "criticas" && !DATOS.trabas.some(t =>
+        t.criticidad === "Alta" && t.direccion === f.direccion)) return false;
+    return true;
+  });
+}
+function trabasFiltradas(){
+  const sec = document.getElementById("f-sec").value;
+  const txt = document.getElementById("f-txt").value.trim().toLowerCase();
+  return DATOS.trabas.filter(t => {
+    if (sec && t.secretaria !== sec) return false;
+    if (txt && !(t.direccion.toLowerCase().includes(txt) ||
+                 t.descripcion.toLowerCase().includes(txt))) return false;
+    if (foco === "criticas" && t.criticidad !== "Alta") return false;
+    return true;
+  });
+}
+
+function render(){
+  const a = DATOS.periodos[0];
+  document.getElementById("h-periodo").textContent = a.corto;
   document.getElementById("h-gen").textContent =
-    (actual.abierto ? "ventana de carga abierta hasta el " + actual.limite
-                    : "ventana cerrada") + " · actualizado " + d.generado;
+    (a.abierto ? "ventana de carga abierta hasta el " + a.limite : "ventana cerrada")
+    + " · actualizado " + DATOS.generado;
 
-  const total     = d.filas.length;
-  const reportaron= d.filas.filter(f => ["en_termino","tarde"].includes(f.celdas[0].estado)).length;
-  const tarde     = d.filas.filter(f => f.celdas[0].estado === "tarde").length;
-  const frias     = d.filas.filter(f => f.rachaSinNovedad >= 3);
-  const mudas     = d.filas.filter(f => f.rachaSinReporte >= 2);
-  const criticas  = d.trabas.filter(t => t.criticidad === "Alta");
+  const n = document.getElementById("nota-inicio");
+  if (DATOS.vigentes <= 2) {
+    n.style.display = "block";
+    n.innerHTML = "<b>Marcha blanca</b>El sistema lleva " + DATOS.vigentes +
+      (DATOS.vigentes === 1 ? " período" : " períodos") + " en funcionamiento. Los períodos " +
+      "anteriores al inicio no se cuentan como incumplimiento y aparecen vacíos en la matriz. " +
+      "Todavía no hay historia suficiente para leer rachas: conviene esperar al menos dos " +
+      "períodos cerrados antes de sacar conclusiones sobre un área.";
+  } else n.style.display = "none";
 
-  document.getElementById("cifras").innerHTML = `
-    <div class="cifra ${reportaron === total ? "verde" : ""}">
-      <div class="n">${reportaron}<small>/${total}</small></div>
-      <div class="l">Direcciones que reportaron el período en curso</div>
-    </div>
-    <div class="cifra ${mudas.length ? "rojo" : ""}">
-      <div class="n">${mudas.length}</div>
-      <div class="l">Áreas sin reportar dos períodos seguidos o más</div>
-    </div>
-    <div class="cifra ${frias.length ? "ambar" : ""}">
-      <div class="n">${frias.length}</div>
-      <div class="l">Áreas sin novedades destacadas hace tres períodos</div>
-    </div>
-    <div class="cifra ${criticas.length ? "rojo" : ""}">
-      <div class="n">${criticas.length}</div>
-      <div class="l">Trabas de criticidad alta sin cerrar</div>
-    </div>`;
+  const fs = filtrar();
+  document.getElementById("tab-tr").textContent = DATOS.trabas.length;
+  if (vista === "resumen") { pintarCifras(fs); pintarAtencion(fs); }
+  if (vista === "matriz")  pintarMatriz(fs);
+  if (vista === "trabas")  pintarTrabas(trabasFiltradas());
+}
 
-  /* --- atención --- */
-  const items = [];
-  mudas.forEach(f => items.push({p:1, tipo:"Silencio sostenido", cls:"r",
-    tit:f.direccion, sec:f.secretaria,
-    txt:`No reporta hace ${f.rachaSinReporte} ${f.rachaSinReporte===1?"período":"períodos"}. ` +
-        `Antes de asumir inactividad, verificar si el referente designado sigue en funciones y tiene acceso al formulario.`,
-    meta:f.referente ? "Referente: " + f.referente : "Sin referente cargado en el sistema"}));
+function pintarCifras(fs){
+  const total = fs.length;
+  const rep   = fs.filter(f => ["en_termino","tarde"].includes(f.celdas[0].estado)).length;
+  const mudas = fs.filter(f => f.rachaSinReporte >= 2).length;
+  const frias = fs.filter(f => f.rachaSinNovedad >= 3).length;
+  const crit  = DATOS.trabas.filter(t => t.criticidad === "Alta" &&
+                  fs.some(f => f.direccion === t.direccion)).length;
+  const c = (id, cls, n, sub, lbl) => `<button class="cifra ${cls} ${foco===id?"on":""}" data-foco="${id}">
+      <div class="n">${n}${sub||""}</div><div class="l">${lbl}</div></button>`;
+  document.getElementById("cifras").innerHTML =
+    c("", rep === total && total ? "verde" : "", rep, `<small>/${total}</small>`,
+      "Direcciones que reportaron el período en curso") +
+    c("mudas", mudas ? "rojo" : "", mudas, "", "Áreas sin reportar dos períodos seguidos o más") +
+    c("frias", frias ? "ambar" : "", frias, "", "Áreas sin novedades destacadas hace tres períodos") +
+    c("criticas", crit ? "rojo" : "", crit, "", "Trabas de criticidad alta sin cerrar");
+  document.querySelectorAll(".cifra").forEach(b => b.onclick = () => {
+    foco = (foco === b.dataset.foco) ? "" : b.dataset.foco; sincro(); render();
+  });
+}
 
-  criticas.slice(0,6).forEach(t => items.push({p:2, tipo:"Traba crítica", cls:"r",
-    tit:t.direccion, sec:t.secretaria, txt:t.descripcion,
-    meta:`Pide: ${t.pedido || "—"} · Resuelve: ${t.quien || "—"} · Trabado hace ${(t.antiguedad||"—").toLowerCase()}`}));
+function pintarAtencion(fs){
+  const G = [
+    { cls:"r", tit:"Silencio sostenido",
+      sub:"No reportan dos períodos seguidos o más. Verificar circuito antes de asumir inactividad.",
+      items: fs.filter(f => f.rachaSinReporte >= 2).map(f => ({
+        sec:f.secretaria, tit:f.direccion,
+        txt:`Sin reporte en ${f.rachaSinReporte} ${f.rachaSinReporte===1?"período":"períodos"} consecutivos. Antes de concluir que el área está detenida, confirmar que el referente sigue en funciones y tiene el enlace.`,
+        meta:f.referente ? "Referente: " + f.referente : "Sin referente cargado en el sistema" })) },
+    { cls:"r", tit:"Trabas de criticidad alta",
+      sub:"Declaradas por las áreas y pendientes de resolución.",
+      items: DATOS.trabas.filter(t => t.criticidad === "Alta" && fs.some(f => f.direccion === t.direccion))
+        .map(t => ({ sec:t.secretaria, tit:t.direccion, txt:t.descripcion,
+          meta:`Pide: ${t.pedido || "—"} · Resuelve: ${t.quien || "—"} · Trabado hace ${(t.antiguedad||"—").toLowerCase()}` })) },
+    { cls:"a", tit:"Sin novedades sostenido",
+      sub:"Reportan en término pero sin nada destacado hace tres períodos o más.",
+      items: fs.filter(f => f.rachaSinNovedad >= 3).map(f => ({
+        sec:f.secretaria, tit:f.direccion,
+        txt:`Marca "sin novedades destacadas" hace ${f.rachaSinNovedad} períodos. Puede ser el caudal normal del área o puede ser inmovilidad: conviene conversarlo con el secretario antes de concluir.`,
+        meta:f.referente ? "Referente: " + f.referente : "" })) },
+    { cls:"a", tit:"Falta el período en curso",
+      sub:"Primera ausencia. Suele resolverse con un recordatorio.",
+      items: fs.filter(f => f.celdas[0].estado === "sin_reporte" && f.rachaSinReporte === 1).map(f => ({
+        sec:f.secretaria, tit:f.direccion, txt:"No presentó el reporte del período en curso.",
+        meta:f.referente ? "Referente: " + f.referente : "Sin referente cargado" })) }
+  ].filter(g => g.items.length);
 
-  frias.forEach(f => items.push({p:3, tipo:"Sin novedades sostenido", cls:"a",
-    tit:f.direccion, sec:f.secretaria,
-    txt:`Reporta en término pero marca "sin novedades destacadas" hace ${f.rachaSinNovedad} períodos. ` +
-        `Puede ser caudal normal del área o puede ser inmovilidad: conviene una conversación con el secretario antes de concluir.`,
-    meta:f.referente ? "Referente: " + f.referente : ""}));
+  const total = G.reduce((a,g) => a + g.items.length, 0);
+  document.getElementById("c-at").textContent = total;
+  document.getElementById("atencion").innerHTML = total ? G.map((g,i) => `
+    <div class="grupo">
+      <button class="g-cab ${i===0?"abierto":""}" data-g="${i}">
+        <span class="g-marca ${g.cls}"></span>
+        <span class="g-txt"><span class="g-tit">${esc(g.tit)}</span><span class="g-sub">${esc(g.sub)}</span></span>
+        <span class="g-n">${g.items.length}</span><span class="g-fl">▶</span>
+      </button>
+      <div class="g-cuerpo ${i===0?"":"oculto"}" data-c="${i}">
+        ${g.items.map(it => `<div class="at-row">
+            <div class="at-marca ${g.cls}"></div>
+            <div class="at-cuerpo">
+              <div class="at-sec">${esc(it.sec)}</div>
+              <div class="at-tit">${esc(it.tit)}</div>
+              <div class="at-txt">${esc(it.txt)}</div>
+              ${it.meta ? `<div class="at-meta">${esc(it.meta)}</div>` : ""}
+            </div></div>`).join("")}
+      </div>
+    </div>`).join("")
+    : `<div class="vacio">Ninguna dirección requiere atención con los filtros aplicados.</div>`;
 
-  d.filas.filter(f => f.celdas[0].estado === "sin_reporte" && f.rachaSinReporte === 1)
-    .forEach(f => items.push({p:4, tipo:"Sin reporte en el período", cls:"a",
-      tit:f.direccion, sec:f.secretaria,
-      txt:"No presentó el reporte del período en curso. Primera vez consecutiva.",
-      meta:f.referente ? "Referente: " + f.referente : "Sin referente cargado"}));
+  document.querySelectorAll(".g-cab").forEach(b => b.onclick = () => {
+    b.classList.toggle("abierto");
+    document.querySelector(`[data-c="${b.dataset.g}"]`).classList.toggle("oculto");
+  });
+}
 
-  items.sort((a,b) => a.p - b.p);
-  document.getElementById("c-at").textContent = items.length;
-  document.getElementById("atencion").innerHTML = items.length
-    ? `<div class="atencion">${items.map(i => `
-        <div class="at-row">
-          <div class="at-marca ${i.cls}"></div>
-          <div class="at-cuerpo">
-            <div class="at-tipo ${i.cls}">${i.tipo} · ${i.sec}</div>
-            <div class="at-tit">${esc(i.tit)}</div>
-            <div class="at-txt">${esc(i.txt)}</div>
-            ${i.meta ? `<div class="at-meta">${esc(i.meta)}</div>` : ""}
-          </div>
-        </div>`).join("")}</div>`
-    : `<div class="vacio">Todas las direcciones reportaron y no hay trabas críticas abiertas.</div>`;
-
-  /* --- matriz --- */
-  document.getElementById("m-head").innerHTML = `<tr>
-      <th>Dirección</th>
-      ${d.periodos.map(p => `<th class="per">${esc(p.corto.replace(" quincena de "," q. "))}<span>${p.abierto?"abierto":"cerrado"}</span></th>`).join("")}
+function pintarMatriz(fs){
+  document.getElementById("c-mx").textContent = fs.length + " de " + DATOS.filas.length;
+  document.getElementById("m-head").innerHTML = `<tr><th>Dirección</th>
+      ${DATOS.periodos.map(p => `<th class="per">${esc(p.corto.replace(" quincena de "," q. "))}<span>${p.previo?"previo":p.abierto?"abierto":"cerrado"}</span></th>`).join("")}
       <th class="per">Racha</th></tr>`;
-
+  if (!fs.length) {
+    document.getElementById("m-body").innerHTML =
+      `<tr><td colspan="${DATOS.periodos.length+2}" style="text-align:center;padding:30px;color:var(--gris)">No hay direcciones que coincidan con los filtros.</td></tr>`;
+    return;
+  }
   const porSec = {};
-  d.filas.forEach(f => (porSec[f.secretaria] = porSec[f.secretaria] || []).push(f));
-
+  fs.forEach(f => (porSec[f.secretaria] = porSec[f.secretaria] || []).push(f));
   let html = "";
   Object.keys(porSec).forEach(sec => {
-    html += `<tr class="sec-fila"><td colspan="${d.periodos.length + 2}">${esc(sec)}</td></tr>`;
+    html += `<tr class="sec-fila"><td colspan="${DATOS.periodos.length + 2}">${esc(sec)}</td></tr>`;
     porSec[sec].forEach(f => {
-      html += `<tr>
-        <td class="dir">${esc(f.direccion)}${f.referente ? `<span class="ref">${esc(f.referente)}</span>` : ""}</td>
-        ${f.celdas.map(celda).join("")}
-        <td class="racha">${rachaTag(f)}</td></tr>`;
+      html += `<tr><td class="dir">${esc(f.direccion)}${f.referente ? `<span class="ref">${esc(f.referente)}</span>` : ""}</td>
+        ${f.celdas.map(celda).join("")}<td class="racha">${rachaTag(f)}</td></tr>`;
     });
   });
   document.getElementById("m-body").innerHTML = html;
+}
 
-  /* --- trabas --- */
-  document.getElementById("c-tr").textContent = d.trabas.length;
-  document.getElementById("trabas").innerHTML = d.trabas.length
-    ? d.trabas.map(t => `
+function pintarTrabas(tr){
+  document.getElementById("c-tr").textContent = tr.length;
+  document.getElementById("trabas").innerHTML = tr.length ? tr.map(t => `
       <div class="traba ${t.criticidad.toLowerCase()}">
         <div class="tr-cab">
           <div class="tr-dir">${esc(t.direccion)}<small>${esc(t.secretaria)}</small></div>
@@ -336,10 +540,11 @@ function pintar(d){
           <span>Reportado en: <b>${esc(t.periodo)}</b></span>
         </div>
       </div>`).join("")
-    : `<div class="vacio">No hay trabas abiertas registradas.</div>`;
+    : `<div class="vacio">No hay trabas abiertas con los filtros aplicados.</div>`;
 }
 
 function celda(c){
+  if (c.estado === "previo")      return `<td class="cel"><span class="celda c-previo">·<small>—</small></span></td>`;
   if (c.estado === "pendiente")   return `<td class="cel"><span class="celda c-pend">·<small>abierto</small></span></td>`;
   if (c.estado === "sin_reporte") return `<td class="cel"><span class="celda c-nada">—<small>sin rep.</small></span></td>`;
   const cls = c.sinNovedades ? "c-sinnov" : (c.estado === "tarde" ? "c-tarde" : "c-ok");
@@ -347,13 +552,11 @@ function celda(c){
   return `<td class="cel"><span class="celda ${cls}">${c.acciones}<small>${et}</small>
     ${c.criticas ? '<span class="punto"></span>' : ""}</span></td>`;
 }
-
 function rachaTag(f){
   if (f.rachaSinReporte >= 2) return `<span class="tag r">${f.rachaSinReporte} sin rep.</span>`;
   if (f.rachaSinNovedad >= 3) return `<span class="tag a">${f.rachaSinNovedad} sin nov.</span>`;
   return `<span class="tag g">—</span>`;
 }
-
 function esc(s){ return String(s == null ? "" : s)
   .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
@@ -404,14 +607,8 @@ function generarDemo(){
                criticas: (k * 3 + i) % 17 === 0 ? 1 : 0,
                fecha: `${String(2 + (k % 3)).padStart(2,"0")}/${String((cm+2) % 12 + 1).padStart(2,"0")}` };
     });
-    let rSR = 0, rSN = 0, cA = false, cB = false;
-    celdas.forEach(cl => {
-      if (cl.estado === "pendiente") return;
-      if (!cA){ if (cl.estado === "sin_reporte") rSR++; else cA = true; }
-      if (!cB){ if (cl.estado === "sin_reporte" || cl.sinNovedades) rSN++; else cB = true; }
-    });
     return { codigo:c, secretaria:u.sec, direccion:u.dir,
-             referente:NOMBRES[k % NOMBRES.length], celdas, rachaSinReporte:rSR, rachaSinNovedad:rSN };
+             referente:NOMBRES[k % NOMBRES.length], celdas, rachaSinReporte:0, rachaSinNovedad:0 };
   });
 
   const trabas = [
