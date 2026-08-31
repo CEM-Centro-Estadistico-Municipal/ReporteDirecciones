@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reporte quincenal de dirección · Municipalidad de Esquina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#12406b; --azul-600:#1a5a92; --azul-100:#e3edf5;
+  --ocre:#b8862b; --ocre-100:#f7eeda;
+  --papel:#f8f5ee; --carta:#fffdf8;
+  --tinta:#1c1a17; --gris:#6b665e; --gris-200:#ddd8ce; --gris-100:#eae5db;
+  --verde:#2f6b46; --verde-100:#e2efe7;
+  --rojo:#9c2c22; --rojo-100:#f7e4e2;
+  --r:10px; --r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  background:var(--papel); color:var(--tinta);
+  font-size:16px; line-height:1.55;
+  padding:0 0 96px;
+}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+
+/* ---------- header ---------- */
+header{background:var(--azul);color:#fff;padding:20px 0 22px;margin-bottom:22px}
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;opacity:.75;margin-bottom:7px}
+h1{font-size:21px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+.sec-tag{display:inline-block;margin-top:9px;padding:3px 10px;border-radius:99px;
+  background:rgba(255,255,255,.16);font-size:12.5px;font-weight:500}
+
+/* ---------- período ---------- */
+.periodo{background:var(--ocre-100);border:1px solid #e8d5a8;border-radius:var(--r);
+  padding:13px 15px;margin-bottom:22px}
+.periodo .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ocre);font-weight:600;margin-bottom:3px}
+.periodo .val{font-size:16.5px;font-weight:600}
+.periodo .sub{font-size:13px;color:var(--gris);margin-top:4px}
+
+/* ---------- bloques ---------- */
+.bloque{background:var(--carta);border:1px solid var(--gris-200);border-radius:var(--r);
+  margin-bottom:18px;overflow:hidden}
+.bloque > .cab{border-top:3px solid var(--azul);padding:14px 16px 12px;
+  border-bottom:1px solid var(--gris-100)}
+.bloque.acento-ocre > .cab{border-top-color:var(--ocre)}
+.bloque.acento-rojo > .cab{border-top-color:var(--rojo)}
+.num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gris);
+  letter-spacing:.1em;font-weight:600}
+.bloque h2{font-size:16.5px;font-weight:600;margin:2px 0 0;letter-spacing:-.01em}
+.bloque .ayuda{font-size:13.5px;color:var(--gris);margin-top:5px;line-height:1.5}
+.cuerpo{padding:15px 16px 17px}
+
+/* ---------- campos ---------- */
+label{display:block;font-size:13.5px;font-weight:600;margin-bottom:5px}
+.op{font-weight:400;color:var(--gris);font-size:12.5px}
+input[type=text],input[type=number],select,textarea{
+  width:100%;font-family:inherit;font-size:16px;color:var(--tinta);
+  background:#fff;border:1px solid var(--gris-200);border-radius:var(--r-sm);
+  padding:10px 12px;transition:border-color .15s,box-shadow .15s}
+textarea{resize:vertical;min-height:74px;line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul-600);
+  box-shadow:0 0 0 3px var(--azul-100)}
+input.err,textarea.err,select.err{border-color:var(--rojo);background:#fffafa}
+.campo{margin-bottom:14px}
+.campo:last-child{margin-bottom:0}
+.fila{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:480px){.fila{grid-template-columns:1fr}}
+.cuenta{font-size:11.5px;color:var(--gris);text-align:right;margin-top:3px;
+  font-family:'IBM Plex Mono',monospace}
+
+/* ---------- ítems repetibles ---------- */
+.item{border:1px solid var(--gris-200);border-radius:var(--r-sm);padding:13px;
+  margin-bottom:11px;background:var(--papel)}
+.item-cab{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.item-n{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;
+  color:var(--azul);letter-spacing:.07em}
+.quitar{background:none;border:none;color:var(--rojo);font-size:12.5px;font-weight:600;
+  cursor:pointer;padding:4px 7px;border-radius:4px;font-family:inherit}
+.quitar:hover{background:var(--rojo-100)}
+.agregar{width:100%;background:#fff;border:1.5px dashed var(--gris-200);color:var(--azul);
+  font-family:inherit;font-size:14px;font-weight:600;padding:11px;border-radius:var(--r-sm);
+  cursor:pointer;transition:.15s}
+.agregar:hover{border-color:var(--azul);background:var(--azul-100)}
+.agregar:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- checkbox ---------- */
+.check{display:flex;gap:11px;align-items:flex-start;background:var(--azul-100);
+  border:1px solid #c9dcea;border-radius:var(--r-sm);padding:13px;cursor:pointer;
+  margin-bottom:14px}
+.check input{width:19px;height:19px;margin-top:1px;accent-color:var(--azul);flex-shrink:0}
+.check .txt{font-size:14px;line-height:1.45}
+.check .txt b{display:block;font-weight:600;margin-bottom:2px}
+.check .txt span{color:var(--gris);font-size:13px}
+
+/* ---------- indicadores ---------- */
+.ind{display:flex;justify-content:space-between;align-items:center;gap:13px;
+  padding:11px 0;border-bottom:1px solid var(--gris-100)}
+.ind:last-child{border-bottom:none;padding-bottom:0}
+.ind-txt{flex:1;min-width:0}
+.ind-txt .n{font-size:14px;font-weight:600;line-height:1.35}
+.ind-txt .u{font-size:12px;color:var(--gris);font-family:'IBM Plex Mono',monospace;
+  text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.ind input{width:118px;flex-shrink:0;text-align:right;font-family:'IBM Plex Mono',monospace;
+  font-weight:600}
+
+/* ---------- criticidad ---------- */
+.pills{display:flex;gap:7px;flex-wrap:wrap}
+.pill{flex:1;min-width:88px;position:relative}
+.pill input{position:absolute;opacity:0;width:0;height:0}
+.pill span{display:block;text-align:center;font-size:13px;font-weight:600;padding:9px 6px;
+  border:1px solid var(--gris-200);border-radius:99px;background:#fff;cursor:pointer;
+  transition:.15s;line-height:1.2}
+.pill input:checked + span{background:var(--azul);border-color:var(--azul);color:#fff}
+.pill.alta input:checked + span{background:var(--rojo);border-color:var(--rojo)}
+
+/* ---------- envío ---------- */
+.barra{position:fixed;bottom:0;left:0;right:0;background:rgba(248,245,238,.96);
+  backdrop-filter:blur(9px);border-top:1px solid var(--gris-200);padding:12px 16px;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom));z-index:40}
+.barra-in{max-width:720px;margin:0 auto}
+.enviar{width:100%;background:var(--azul);color:#fff;border:none;border-radius:var(--r-sm);
+  font-family:inherit;font-size:16px;font-weight:600;padding:15px;cursor:pointer;
+  transition:.15s}
+.enviar:hover{background:var(--azul-600)}
+.enviar:active{transform:scale(.985)}
+.enviar:disabled{background:var(--gris);cursor:not-allowed}
+
+/* ---------- avisos ---------- */
+.aviso{border-radius:var(--r-sm);padding:12px 14px;font-size:13.5px;margin-bottom:16px;
+  line-height:1.5}
+.aviso.error{background:var(--rojo-100);border:1px solid #e8c4bf;color:var(--rojo)}
+.aviso.info{background:var(--azul-100);border:1px solid #c9dcea;color:var(--azul)}
+.aviso b{display:block;margin-bottom:2px}
+
+/* ---------- pantallas de estado ---------- */
+.estado{text-align:center;padding:56px 20px}
+.estado .ico{width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;font-size:29px;font-weight:600;color:#fff}
+.estado.ok .ico{background:var(--verde)}
+.estado.mal .ico{background:var(--rojo)}
+.estado h2{font-size:21px;font-weight:600;margin-bottom:9px}
+.estado p{color:var(--gris);font-size:15px;max-width:400px;margin:0 auto 8px;line-height:1.55}
+.estado .cod{font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--gris-100);
+  padding:8px 13px;border-radius:var(--r-sm);display:inline-block;margin-top:16px}
+.oculto{display:none!important}
+
+/* ---------- selector de dirección ---------- */
+.sel-buscar{position:relative;margin-bottom:18px}
+.sel-buscar input{padding:12px 14px;font-size:16px}
+.sel-grupo{margin-bottom:20px}
+.sel-grupo h3{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--azul);font-weight:600;margin-bottom:8px;
+  padding-bottom:6px;border-bottom:1px solid var(--gris-200)}
+a.sel-item{display:block;background:var(--carta);border:1px solid var(--gris-200);
+  border-radius:var(--r-sm);padding:12px 14px;margin-bottom:7px;text-decoration:none;
+  color:var(--tinta);transition:.15s}
+a.sel-item:hover{border-color:var(--azul);background:var(--azul-100)}
+a.sel-item:active{transform:scale(.99)}
+.sel-item .n{display:block;font-size:14.5px;font-weight:600;line-height:1.3}
+.sel-item .c{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gris);margin-top:2px}
+.sel-vacio{text-align:center;padding:30px 16px;color:var(--gris);font-size:14px}
+.volver{display:inline-block;margin-top:20px;background:var(--azul);color:#fff;
+  text-decoration:none;font-size:14.5px;font-weight:600;padding:11px 20px;
+  border-radius:var(--r-sm)}
+footer{text-align:center;font-size:12px;color:var(--gris);padding:26px 16px 8px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- ============ FORMULARIO ============ -->
+<div id="app">
+  <header>
+    <div class="wrap">
+      <div class="kicker">Municipalidad de Esquina · CEM</div>
+      <h1 id="h-dir">Reporte quincenal de dirección</h1>
+      <div class="sec-tag" id="h-sec">Cargando…</div>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <div class="periodo">
+      <div class="lbl">Período que se informa</div>
+      <div class="val" id="p-label">—</div>
+      <div class="sub" id="p-sub">—</div>
+    </div>
+
+    <div id="aviso-error" class="aviso error oculto"></div>
+
+    <!-- 1. REFERENTE -->
+    <section class="bloque">
+      <div class="cab">
+        <div class="num">01</div>
+        <h2>Quién informa</h2>
+        <div class="ayuda">El referente carga la información. La responsabilidad sobre el
+          contenido del reporte es del Director/a del área.</div>
+      </div>
+      <div class="cuerpo">
+        <div class="fila">
+          <div class="campo">
+            <label for="ref-nombre">Nombre y apellido del referente</label>
+            <input type="text" id="ref-nombre" autocomplete="name">
+          </div>
+          <div class="campo">
+            <label for="ref-tel">Teléfono de contacto</label>
+            <input type="text" id="ref-tel" inputmode="tel" placeholder="379 …">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ACCIONES -->
+    <section class="bloque">
+      <div class="cab">
+        <div class="num">02</div>
+        <h2>Acciones del período</h2>
+        <div class="ayuda">Hasta cinco. Cargá lo que efectivamente se hizo, con su alcance
+          concreto. Una acción sin número de alcance no se puede comparar entre períodos.</div>
+      </div>
+      <div class="cuerpo">
+        <div id="acciones"></div>
+        <button type="button" class="agregar" id="add-accion">+ Agregar acción</button>
+      </div>
+    </section>
+
+    <!-- 3. NOVEDAD -->
+    <section class="bloque acento-ocre">
+      <div class="cab">
+        <div class="num">03</div>
+        <h2>Novedad destacada</h2>
+        <div class="ayuda">Una sola. Lo que el liderazgo debería saber de esta área en este
+          período. Si no hubo nada relevante, marcalo: es una respuesta válida.</div>
+      </div>
+      <div class="cuerpo">
+        <label class="check" for="sin-nov">
+          <input type="checkbox" id="sin-nov">
+          <span class="txt">
+            <b>Sin novedades destacadas en este período</b>
+            <span>El área trabajó con normalidad y no hubo hechos que ameriten atención del liderazgo.</span>
+          </span>
+        </label>
+        <div id="nov-campos">
+          <div class="campo">
+            <label for="nov-txt">Descripción de la novedad</label>
+            <textarea id="nov-txt" maxlength="600"
+              placeholder="Qué pasó, a quién involucra y por qué es relevante."></textarea>
+            <div class="cuenta"><span id="nov-c">0</span>/600</div>
+          </div>
+          <div class="campo">
+            <label for="nov-imp">Impacto <span class="op">— a quién le cambia algo y en qué medida</span></label>
+            <textarea id="nov-imp" maxlength="400"
+              placeholder="Ej.: 40 familias del barrio Belgrano acceden al servicio por primera vez."></textarea>
+            <div class="cuenta"><span id="nov-i">0</span>/400</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TRABAS -->
+    <section class="bloque acento-rojo">
+      <div class="cab">
+        <div class="num">04</div>
+        <h2>Trabas y pedidos al liderazgo</h2>
+        <div class="ayuda">Qué está frenando el trabajo del área y quién puede destrabarlo.
+          Este bloque se eleva directamente a Coordinación General.</div>
+      </div>
+      <div class="cuerpo">
+        <div id="trabas"></div>
+        <button type="button" class="agregar" id="add-traba">+ Agregar traba o pedido</button>
+      </div>
+    </section>
+
+    <!-- 5. INDICADORES -->
+    <section class="bloque">
+      <div class="cab">
+        <div class="num">05</div>
+        <h2>Indicadores fijos del área</h2>
+        <div class="ayuda">Se repiten idénticos todos los períodos. Son los que construyen la
+          serie histórica. Si un dato no está disponible, dejalo vacío: no pongas cero.</div>
+      </div>
+      <div class="cuerpo" id="indicadores"></div>
+    </section>
+
+    <!-- 6. OBSERVACIONES -->
+    <section class="bloque">
+      <div class="cab">
+        <div class="num">06</div>
+        <h2>Observaciones <span class="op">(opcional)</span></h2>
+      </div>
+      <div class="cuerpo">
+        <div class="campo">
+          <textarea id="obs" maxlength="500"
+            placeholder="Cualquier cosa que no entró en los bloques anteriores."></textarea>
+          <div class="cuenta"><span id="obs-c">0</span>/500</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Centro Estadístico Municipal · Secretaría de Coordinación General<br>
+      Art. 103 de la Carta Orgánica Municipal
+    </footer>
+  </div>
+
+  <div class="barra">
+    <div class="barra-in">
+      <button class="enviar" id="btn-enviar">Enviar reporte</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANTALLAS DE ESTADO ============ -->
+<div id="pant-ok" class="oculto">
+  <div class="estado ok">
+    <div class="ico">✓</div>
+    <h2>Reporte enviado</h2>
+    <p id="ok-txt">Quedó registrado el reporte del área.</p>
+    <p>Ya podés cerrar esta pantalla.</p>
+    <div class="cod" id="ok-cod"></div>
+  </div>
+</div>
+
+<div id="pant-elegir" class="oculto">
+  <header>
+    <div class="wrap">
+      <div class="kicker">Municipalidad de Esquina · CEM</div>
+      <h1>Reporte quincenal de dirección</h1>
+      <div class="sec-tag" id="e-periodo">—</div>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="aviso info">
+      <b>Elegí tu dirección</b>
+      Cada área tiene su enlace propio. Si lo guardás en favoritos entrás directo la
+      próxima vez y no tenés que buscar en esta lista.
+    </div>
+    <div class="sel-buscar">
+      <input type="text" id="sel-q" placeholder="Buscar dirección o secretaría…" autocomplete="off">
+    </div>
+    <div id="sel-lista"></div>
+    <footer>
+      Centro Estadístico Municipal · Secretaría de Coordinación General<br>
+      Art. 103 de la Carta Orgánica Municipal
+    </footer>
+  </div>
+</div>
+
+<div id="pant-mal" class="oculto">
+  <div class="estado mal">
+    <div class="ico">!</div>
+    <h2 id="mal-tit">No se pudo abrir el formulario</h2>
+    <p id="mal-txt"></p>
+    <a class="volver" href="?">Ver todas las direcciones</a>
+  </div>
+</div>
+
+<script src="direcciones.js"></script>
+<script>
+/* ==========================================================================
+   CONFIGURACIÓN — reemplazar por la URL /exec del Apps Script implementado
+   ========================================================================== */
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbyOM3bpN2yuS6dV2kp0FkC-qpoot6hdhUU1raoPjx7k8Hr3JlzOoliG0RxxcU7CIkahZw/exec";
+
+const MAX_ACCIONES = 5, MAX_TRABAS = 3;
+let unidad = null, codigo = null, periodo = null;
+let nAcc = 0, nTrb = 0;
+
+/* ---------- períodos quincenales ----------
+   Q1 = días 1 al 15 · Q2 = día 16 al último del mes.
+   El período se reporta en los días siguientes a su cierre.            */
+function periodoAReportar(hoy){
+  const d = hoy.getDate(), m = hoy.getMonth(), a = hoy.getFullYear();
+  if (d >= 16) {
+    return armar(a, m, 1);                                  // se informa Q1 del mes en curso
+  }
+  const ant = new Date(a, m, 0);                            // último día del mes anterior
+  return armar(ant.getFullYear(), ant.getMonth(), 2);       // se informa Q2 del mes anterior
+}
+function armar(a, m, q){
+  const fin = q === 1 ? 15 : new Date(a, m+1, 0).getDate();
+  const ini = q === 1 ? 1 : 16;
+  const MES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto",
+               "septiembre","octubre","noviembre","diciembre"];
+  return {
+    id: `${a}-${String(m+1).padStart(2,"0")}-Q${q}`,
+    label: `${ini} al ${fin} de ${MES[m]} de ${a}`,
+    corto: `${q===1?"1ª":"2ª"} quincena de ${MES[m]}`,
+    cierre: new Date(a, m, fin, 23, 59, 59)
+  };
+}
+
+/* ---------- arranque ---------- */
+(function init(){
+  const p = new URLSearchParams(location.search);
+  codigo = (p.get("d") || "").trim().toLowerCase();
+
+  if (!codigo) return elegirDireccion();
+
+  if (!CATALOGO[codigo]) {
+    return fallar("No se pudo abrir el formulario",
+      `El código "${codigo}" no corresponde a ninguna dirección. Verificá el enlace o pedilo de nuevo al CEM.`);
+  }
+
+  unidad  = CATALOGO[codigo];
+  periodo = periodoAReportar(new Date());
+
+  document.title = `Reporte quincenal · ${unidad.dir}`;
+  document.getElementById("h-dir").textContent = unidad.dir;
+  document.getElementById("h-sec").textContent =
+    unidad.sec === "Intendencia" ? "Intendencia" : "Secretaría de " + unidad.sec;
+  document.getElementById("p-label").textContent = periodo.corto;
+  document.getElementById("p-sub").textContent = periodo.label;
+
+  pintarIndicadores();
+  addAccion();
+  contador("nov-txt","nov-c"); contador("nov-imp","nov-i"); contador("obs","obs-c");
+
+  document.getElementById("add-accion").onclick = addAccion;
+  document.getElementById("add-traba").onclick  = addTraba;
+  document.getElementById("btn-enviar").onclick = enviar;
+  document.getElementById("sin-nov").onchange = e => {
+    const c = document.getElementById("nov-campos");
+    c.classList.toggle("oculto", e.target.checked);
+    if (e.target.checked){ document.getElementById("nov-txt").value=""; document.getElementById("nov-imp").value=""; }
+  };
+})();
+
+function elegirDireccion(){
+  document.getElementById("app").classList.add("oculto");
+  const per = periodoAReportar(new Date());
+  document.getElementById("e-periodo").textContent = "Período a informar: " + per.corto;
+
+  const orden = typeof SECRETARIAS !== "undefined" ? SECRETARIAS : [];
+  const grupos = {};
+  Object.keys(CATALOGO).forEach(c => {
+    const u = CATALOGO[c];
+    (grupos[u.sec] = grupos[u.sec] || []).push({ cod: c, dir: u.dir });
+  });
+  const secs = orden.filter(s => grupos[s])
+    .concat(Object.keys(grupos).filter(s => orden.indexOf(s) === -1));
+
+  const cont = document.getElementById("sel-lista");
+
+  function pintar(filtro){
+    const f = (filtro || "").trim().toLowerCase();
+    let html = "", total = 0;
+    secs.forEach(sec => {
+      const items = grupos[sec].filter(i =>
+        !f || i.dir.toLowerCase().includes(f) || sec.toLowerCase().includes(f));
+      if (!items.length) return;
+      total += items.length;
+      html += `<div class="sel-grupo"><h3>${esc(sec === "Intendencia" ? "Intendencia" : "Secretaría de " + sec)}</h3>` +
+        items.map(i => `<a class="sel-item" href="?d=${encodeURIComponent(i.cod)}">
+            <span class="n">${esc(i.dir)}</span><span class="c">${esc(i.cod)}</span></a>`).join("") +
+        `</div>`;
+    });
+    cont.innerHTML = total ? html
+      : `<div class="sel-vacio">No hay direcciones que coincidan con la búsqueda.</div>`;
+  }
+
+  pintar("");
+  document.getElementById("sel-q").addEventListener("input", e => pintar(e.target.value));
+  document.getElementById("pant-elegir").classList.remove("oculto");
+}
+
+function esc(s){ return String(s == null ? "" : s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function fallar(t, m){
+  document.getElementById("app").classList.add("oculto");
+  document.getElementById("mal-tit").textContent = t;
+  document.getElementById("mal-txt").textContent = m;
+  document.getElementById("pant-mal").classList.remove("oculto");
+}
+
+function contador(idT, idC){
+  const t = document.getElementById(idT), c = document.getElementById(idC);
+  t.addEventListener("input", () => c.textContent = t.value.length);
+}
+
+/* ---------- acciones ---------- */
+function addAccion(){
+  if (nAcc >= MAX_ACCIONES) return;
+  nAcc++;
+  const i = nAcc;
+  const d = document.createElement("div");
+  d.className = "item"; d.dataset.accion = i;
+  d.innerHTML = `
+    <div class="item-cab">
+      <span class="item-n">ACCIÓN ${String(i).padStart(2,"0")}</span>
+      ${i > 1 ? '<button type="button" class="quitar">Quitar</button>' : ''}
+    </div>
+    <div class="campo">
+      <label>Qué se hizo</label>
+      <textarea class="a-desc" maxlength="300" placeholder="Una línea o dos. Concreto."></textarea>
+    </div>
+    <div class="fila">
+      <div class="campo">
+        <label>Alcance <span class="op">— número</span></label>
+        <input type="number" class="a-cant" min="0" step="1" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="campo">
+        <label>Unidad del alcance</label>
+        <input type="text" class="a-uni" placeholder="personas, cuadras, comercios…">
+      </div>
+    </div>
+    <div class="campo" style="margin-bottom:0">
+      <label>Dónde <span class="op">— barrio, paraje o "todo el ejido"</span></label>
+      <input type="text" class="a-lugar" placeholder="Ej.: barrio Guayquiraró">
+    </div>`;
+  const q = d.querySelector(".quitar");
+  if (q) q.onclick = () => { d.remove(); nAcc--; renumerar(); toggleBtns(); };
+  document.getElementById("acciones").appendChild(d);
+  toggleBtns();
+}
+
+function addTraba(){
+  if (nTrb >= MAX_TRABAS) return;
+  nTrb++;
+  const i = nTrb;
+  const d = document.createElement("div");
+  d.className = "item"; d.dataset.traba = i;
+  d.innerHTML = `
+    <div class="item-cab">
+      <span class="item-n">TRABA ${String(i).padStart(2,"0")}</span>
+      <button type="button" class="quitar">Quitar</button>
+    </div>
+    <div class="campo">
+      <label>Qué está frenando el trabajo</label>
+      <textarea class="t-desc" maxlength="400" placeholder="Describí la traba concreta, no el malestar general."></textarea>
+    </div>
+    <div class="campo">
+      <label>Qué se necesita para destrabarlo</label>
+      <textarea class="t-pide" maxlength="300" placeholder="Un pedido concreto y accionable."></textarea>
+    </div>
+    <div class="fila">
+      <div class="campo">
+        <label>Quién puede resolverlo</label>
+        <select class="t-quien">
+          <option value="">Seleccionar…</option>
+          <option>Intendencia</option>
+          <option>Coordinación General</option>
+          <option>La propia Secretaría</option>
+          <option>Contabilidad y Administración (compras)</option>
+          <option>Tesorería Municipal (pagos)</option>
+          <option>Recursos Humanos y Personal</option>
+          <option>Planificación y Modernización (informática)</option>
+          <option>Asesoría Letrada</option>
+          <option>Obras y Servicios Públicos</option>
+          <option>Otra dirección</option>
+          <option>Organismo externo al municipio</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label>Hace cuánto está trabado</label>
+        <select class="t-tiempo">
+          <option value="">Seleccionar…</option>
+          <option>Menos de 15 días</option>
+          <option>Entre 15 días y un mes</option>
+          <option>Entre uno y tres meses</option>
+          <option>Más de tres meses</option>
+        </select>
+      </div>
+    </div>
+    <div class="campo" style="margin-bottom:0">
+      <label>Criticidad</label>
+      <div class="pills">
+        <label class="pill"><input type="radio" name="crit${i}" value="Baja"><span>Baja</span></label>
+        <label class="pill"><input type="radio" name="crit${i}" value="Media" checked><span>Media</span></label>
+        <label class="pill alta"><input type="radio" name="crit${i}" value="Alta"><span>Alta</span></label>
+      </div>
+    </div>`;
+  d.querySelector(".quitar").onclick = () => { d.remove(); nTrb--; renumerar(); toggleBtns(); };
+  document.getElementById("trabas").appendChild(d);
+  toggleBtns();
+}
+
+function renumerar(){
+  document.querySelectorAll("#acciones .item").forEach((el,k) =>
+    el.querySelector(".item-n").textContent = "ACCIÓN " + String(k+1).padStart(2,"0"));
+  document.querySelectorAll("#trabas .item").forEach((el,k) =>
+    el.querySelector(".item-n").textContent = "TRABA " + String(k+1).padStart(2,"0"));
+}
+function toggleBtns(){
+  document.getElementById("add-accion").disabled = nAcc >= MAX_ACCIONES;
+  document.getElementById("add-traba").disabled  = nTrb >= MAX_TRABAS;
+  document.getElementById("add-accion").textContent =
+    nAcc >= MAX_ACCIONES ? `Máximo ${MAX_ACCIONES} acciones` : "+ Agregar acción";
+  document.getElementById("add-traba").textContent =
+    nTrb >= MAX_TRABAS ? `Máximo ${MAX_TRABAS} trabas` : "+ Agregar traba o pedido";
+}
+
+/* ---------- indicadores ---------- */
+function pintarIndicadores(){
+  const c = document.getElementById("indicadores");
+  c.innerHTML = unidad.indicadores.map(i => `
+    <div class="ind">
+      <div class="ind-txt">
+        <div class="n">${i.label}</div>
+        <div class="u">${i.unidad}</div>
+      </div>
+      <input type="number" class="i-val" data-id="${i.id}" data-label="${i.label}"
+             data-unidad="${i.unidad}" min="0" step="any" inputmode="decimal" placeholder="—">
+    </div>`).join("");
+}
+
+/* ---------- validación y envío ---------- */
+function enviar(){
+  document.querySelectorAll(".err").forEach(e => e.classList.remove("err"));
+  const errs = [];
+
+  const nom = document.getElementById("ref-nombre");
+  if (!nom.value.trim()){ errs.push("Falta el nombre del referente."); nom.classList.add("err"); }
+
+  const acciones = [];
+  document.querySelectorAll("#acciones .item").forEach(el => {
+    const desc = el.querySelector(".a-desc");
+    if (!desc.value.trim()) return;
+    acciones.push({
+      descripcion: desc.value.trim(),
+      cantidad: el.querySelector(".a-cant").value || "",
+      unidad: el.querySelector(".a-uni").value.trim(),
+      lugar: el.querySelector(".a-lugar").value.trim()
+    });
+  });
+  if (!acciones.length){
+    errs.push("Cargá al menos una acción del período. Si el área no ejecutó ninguna acción, escribilo así en la acción 01.");
+    const p = document.querySelector("#acciones .a-desc"); if (p) p.classList.add("err");
+  }
+
+  const sinNov = document.getElementById("sin-nov").checked;
+  const novTxt = document.getElementById("nov-txt").value.trim();
+  if (!sinNov && !novTxt){
+    errs.push("Cargá la novedad destacada o marcá que no hubo novedades en el período.");
+    document.getElementById("nov-txt").classList.add("err");
+  }
+
+  const trabas = [];
+  document.querySelectorAll("#trabas .item").forEach(el => {
+    const desc = el.querySelector(".t-desc");
+    if (!desc.value.trim()) return;
+    const cr = el.querySelector("input[type=radio]:checked");
+    trabas.push({
+      descripcion: desc.value.trim(),
+      pedido: el.querySelector(".t-pide").value.trim(),
+      quien: el.querySelector(".t-quien").value,
+      antiguedad: el.querySelector(".t-tiempo").value,
+      criticidad: cr ? cr.value : "Media"
+    });
+  });
+
+  const indicadores = [];
+  document.querySelectorAll(".i-val").forEach(el => indicadores.push({
+    id: el.dataset.id, label: el.dataset.label,
+    unidad: el.dataset.unidad, valor: el.value === "" ? "" : Number(el.value)
+  }));
+
+  const box = document.getElementById("aviso-error");
+  if (errs.length){
+    box.innerHTML = "<b>Revisá antes de enviar</b>" + errs.join("<br>");
+    box.classList.remove("oculto");
+    box.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  box.classList.add("oculto");
+
+  const payload = {
+    codigo, secretaria: unidad.sec, direccion: unidad.dir,
+    periodoId: periodo.id, periodoLabel: periodo.corto,
+    fechaCierrePeriodo: periodo.cierre.toISOString(),
+    referente: nom.value.trim(),
+    telefono: document.getElementById("ref-tel").value.trim(),
+    acciones, trabas, indicadores,
+    sinNovedades: sinNov,
+    novedad: novTxt,
+    impacto: document.getElementById("nov-imp").value.trim(),
+    observaciones: document.getElementById("obs").value.trim(),
+    enviadoEn: new Date().toISOString()
+  };
+
+  const btn = document.getElementById("btn-enviar");
+  btn.disabled = true; btn.textContent = "Enviando…";
+
+  fetch(ENDPOINT, {
+    method: "POST", mode: "cors", redirect: "follow",
+    headers: {"Content-Type":"text/plain;charset=utf-8"},
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(r => {
+    if (r.ok) exito(r);
+    else throw new Error(r.error || "Respuesta inesperada del servidor");
+  })
+  .catch(e => {
+    btn.disabled = false; btn.textContent = "Enviar reporte";
+    box.innerHTML = "<b>No se pudo enviar</b>Revisá la conexión y probá de nuevo. Si vuelve a fallar, avisá al CEM. (" + e.message + ")";
+    box.classList.remove("oculto");
+    box.scrollIntoView({behavior:"smooth", block:"center"});
+  });
+}
+
+function exito(r){
+  document.getElementById("app").classList.add("oculto");
+  document.getElementById("ok-txt").textContent =
+    `Quedó registrado el reporte de ${unidad.dir} correspondiente a la ${periodo.corto}.`;
+  document.getElementById("ok-cod").textContent = "N.º de reporte: " + (r.id || periodo.id);
+  document.getElementById("pant-ok").classList.remove("oculto");
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
