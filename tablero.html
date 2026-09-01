@@ -195,6 +195,33 @@ input[type=text]{min-width:180px}
 .nota.azul{background:var(--azul-100);border:1px solid #c9dcea}
 .nota b{display:block;margin-bottom:2px}
 .nota.ocre b{color:var(--ocre)} .nota.azul b{color:var(--azul)}
+/* ---------- indicadores ---------- */
+.ind-area{background:var(--carta);border:1px solid var(--gris-200);border-radius:var(--r);
+  margin-bottom:12px;overflow:hidden}
+.ind-cab{padding:11px 15px;border-bottom:1px solid var(--gris-100);background:var(--papel)}
+.ind-dir{font-size:14.5px;font-weight:600;line-height:1.3}
+.ind-sec{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gris);margin-top:1px}
+.ind-tabla{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+.ind-tabla th{background:transparent;font-size:10px;font-family:'IBM Plex Mono',monospace;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--gris);font-weight:600;
+  padding:7px 10px;border-bottom:1px solid var(--gris-100);position:static}
+.ind-tabla th.v{text-align:center;width:62px}
+.ind-tabla td{padding:9px 10px;border-bottom:1px solid var(--gris-100);vertical-align:middle}
+.ind-tabla tr:last-child td{border-bottom:none}
+.ind-nom{font-weight:500;line-height:1.3}
+.ind-uni{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--gris);
+  text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+.ind-val{text-align:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13.5px}
+.ind-val.nd{color:#c9c3b8;font-weight:400}
+.ind-val.ult{background:var(--azul-100);border-radius:5px}
+.delta{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+  font-weight:600;padding:2px 7px;border-radius:99px;white-space:nowrap}
+.delta.sube{background:var(--verde-100);color:var(--verde)}
+.delta.baja{background:var(--rojo-100);color:var(--rojo)}
+.delta.igual{background:var(--gris-100);color:var(--gris)}
+.spark{display:block;margin-top:3px}
+.ind-scroll{overflow-x:auto}
 .oculto{display:none!important}
 .vacio{text-align:center;padding:34px 20px;color:var(--gris);font-size:14px;
   background:var(--carta);border:1px solid var(--gris-200);border-radius:var(--r)}
@@ -224,6 +251,7 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
   <div class="tabs">
     <button class="tab on" data-v="resumen">Resumen</button>
     <button class="tab" data-v="matriz">Matriz de cumplimiento</button>
+    <button class="tab" data-v="indicadores">Indicadores</button>
     <button class="tab" data-v="trabas">Trabas abiertas <span class="n" id="tab-tr">0</span></button>
   </div>
 
@@ -279,6 +307,17 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
           <div><span class="sw" style="background:var(--rojo);border-radius:50%;width:9px;height:9px"></span> Traba crítica</div>
         </div>
       </div>
+    </section>
+  </div>
+
+  <div id="v-indicadores" class="oculto">
+    <section>
+      <div class="stit"><h2>Indicadores fijos por área</h2><span class="cnt" id="c-ind">0</span></div>
+      <div class="sdesc">Cada área informa entre dos y tres cifras que se repiten idénticas
+        todos los períodos. Son lo único del reporte que permite comparar una quincena con
+        otra. La variación se calcula contra el período anterior con dato cargado; un campo
+        vacío significa que el dato no estuvo disponible, no que valga cero.</div>
+      <div id="indicadores"></div>
     </section>
   </div>
 
@@ -352,7 +391,7 @@ function montarControles(){
   document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
     vista = t.dataset.v;
     document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === t));
-    ["resumen","matriz","trabas"].forEach(v =>
+    ["resumen","matriz","indicadores","trabas"].forEach(v =>
       document.getElementById("v-" + v).classList.toggle("oculto", v !== vista));
     render();
   });
@@ -424,6 +463,7 @@ function render(){
   document.getElementById("tab-tr").textContent = DATOS.trabas.length;
   if (vista === "resumen") { pintarCifras(fs); pintarAtencion(fs); }
   if (vista === "matriz")  pintarMatriz(fs);
+  if (vista === "indicadores") pintarIndicadores();
   if (vista === "trabas")  pintarTrabas(trabasFiltradas());
 }
 
@@ -522,6 +562,99 @@ function pintarMatriz(fs){
     });
   });
   document.getElementById("m-body").innerHTML = html;
+}
+
+const NUM = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 2 });
+
+function pintarIndicadores(){
+  const sec = document.getElementById("f-sec").value;
+  const txt = document.getElementById("f-txt").value.trim().toLowerCase();
+  const visibles = new Set(filtrar().map(f => f.codigo));
+  const ids = DATOS.periodos.map(p => p.id).slice().reverse();   // del más viejo al más nuevo
+
+  const porArea = {};
+  (DATOS.indicadores || []).forEach(s => {
+    if (!visibles.has(s.codigo)) return;
+    if (sec && s.secretaria !== sec) return;
+    if (txt && !(s.direccion.toLowerCase().includes(txt) ||
+                 s.label.toLowerCase().includes(txt))) return;
+    (porArea[s.codigo] = porArea[s.codigo] || { dir:s.direccion, sec:s.secretaria, series:[] }).series.push(s);
+  });
+
+  const areas = Object.keys(porArea);
+  document.getElementById("c-ind").textContent = areas.length + " áreas";
+
+  if (!areas.length) {
+    document.getElementById("indicadores").innerHTML =
+      `<div class="vacio">Todavía no hay indicadores cargados, o ninguno coincide con los filtros.
+       Los indicadores aparecen acá una vez que las áreas empiezan a reportar.</div>`;
+    return;
+  }
+
+  document.getElementById("indicadores").innerHTML = areas.map(cod => {
+    const a = porArea[cod];
+    return `<div class="ind-area">
+      <div class="ind-cab">
+        <div class="ind-dir">${esc(a.dir)}</div>
+        <div class="ind-sec">${esc(a.sec)}</div>
+      </div>
+      <div class="ind-scroll"><table class="ind-tabla">
+        <thead><tr><th>Indicador</th>
+          ${ids.map(id => `<th class="v">${esc(etiquetaPeriodo(id))}</th>`).join("")}
+          <th class="v">Variación</th></tr></thead>
+        <tbody>${a.series.map(s => filaIndicador(s, ids)).join("")}</tbody>
+      </table></div>
+    </div>`;
+  }).join("");
+}
+
+function etiquetaPeriodo(id){
+  const p = DATOS.periodos.find(x => x.id === id);
+  if (!p) return id;
+  const m = p.corto.match(/^(\d)ª quincena de (\w{3})/);
+  return m ? m[1] + "ª " + m[2] : p.corto;
+}
+
+function filaIndicador(s, ids){
+  const vals = ids.map(id => s.valores[id]);
+  const conDato = vals.map((v,i) => v === undefined ? null : i).filter(i => i !== null);
+  let delta = `<span class="delta igual">—</span>`;
+
+  if (conDato.length >= 2) {
+    const ult = vals[conDato[conDato.length-1]], prev = vals[conDato[conDato.length-2]];
+    const d = ult - prev;
+    if (d === 0) delta = `<span class="delta igual">sin cambio</span>`;
+    else {
+      const pct = prev ? Math.round(Math.abs(d) / Math.abs(prev) * 100) : null;
+      delta = `<span class="delta ${d > 0 ? "sube" : "baja"}">${d > 0 ? "▲" : "▼"} ${NUM.format(Math.abs(d))}${pct !== null ? " · " + pct + "%" : ""}</span>`;
+    }
+  } else if (conDato.length === 1) {
+    delta = `<span class="delta igual">primer dato</span>`;
+  }
+
+  const ultimoIdx = conDato.length ? conDato[conDato.length-1] : -1;
+  return `<tr>
+    <td><div class="ind-nom">${esc(s.label)}</div><div class="ind-uni">${esc(s.unidad)}</div>
+      ${sparkline(vals)}</td>
+    ${vals.map((v,i) => `<td class="ind-val ${v === undefined ? "nd" : ""} ${i === ultimoIdx ? "ult" : ""}">${v === undefined ? "—" : NUM.format(v)}</td>`).join("")}
+    <td style="text-align:center">${delta}</td></tr>`;
+}
+
+function sparkline(vals){
+  const pts = vals.map((v,i) => v === undefined ? null : {i, v}).filter(Boolean);
+  if (pts.length < 2) return "";
+  const vs = pts.map(p => p.v), min = Math.min(...vs), max = Math.max(...vs);
+  const w = 130, h = 22, rango = (max - min) || 1;
+  const xy = pts.map(p => [
+    (p.i / Math.max(vals.length - 1, 1)) * (w - 4) + 2,
+    h - 3 - ((p.v - min) / rango) * (h - 6)
+  ]);
+  const d = xy.map((c,i) => (i ? "L" : "M") + c[0].toFixed(1) + " " + c[1].toFixed(1)).join(" ");
+  const fin = xy[xy.length-1];
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+    <path d="${d}" fill="none" stroke="#1a5a92" stroke-width="1.6"
+      stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>
+    <circle cx="${fin[0].toFixed(1)}" cy="${fin[1].toFixed(1)}" r="2.4" fill="#12406b"/></svg>`;
 }
 
 function pintarTrabas(tr){
