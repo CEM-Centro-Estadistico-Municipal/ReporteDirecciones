@@ -102,6 +102,10 @@ input.err,textarea.err,select.err{border-color:var(--rojo);background:#fffafa}
 .ind{display:flex;justify-content:space-between;align-items:center;gap:13px;
   padding:11px 0;border-bottom:1px solid var(--gris-100)}
 .ind:last-child{border-bottom:none;padding-bottom:0}
+.ind-grupo{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--azul);margin:16px 0 2px;padding-top:12px;border-top:2px solid var(--azul)}
+.ind-grupo:first-child{margin-top:0;padding-top:0;border-top:none}
+.ind-grupo + .ind{border-bottom:1px solid var(--gris-100)}
 .ind-txt{flex:1;min-width:0}
 .ind-txt .n{font-size:14px;font-weight:600;line-height:1.35}
 .ind-txt .u{font-size:12px;color:var(--gris);font-family:'IBM Plex Mono',monospace;
@@ -599,15 +603,26 @@ function toggleBtns(){
 /* ---------- indicadores ---------- */
 function pintarIndicadores(){
   const c = document.getElementById("indicadores");
-  c.innerHTML = unidad.indicadores.map(i => `
+  let grupoActual = null;
+  c.innerHTML = unidad.indicadores.map(i => {
+    let cab = "";
+    if (i.grupo && i.grupo !== grupoActual){
+      grupoActual = i.grupo;
+      cab = `<div class="ind-grupo">${i.grupo}</div>`;
+    }
+    /* al sheet viaja el label completo, para que no se confundan dos
+       indicadores con el mismo nombre en grupos distintos */
+    const completo = i.grupo ? `${i.grupo} · ${i.label}` : i.label;
+    return cab + `
     <div class="ind">
       <div class="ind-txt">
         <div class="n">${i.label}</div>
         <div class="u">${i.unidad}</div>
       </div>
-      <input type="number" class="i-val" data-id="${i.id}" data-label="${i.label}"
+      <input type="number" class="i-val" data-id="${i.id}" data-label="${completo}"
              data-unidad="${i.unidad}" min="0" step="any" inputmode="decimal" placeholder="—">
-    </div>`).join("");
+    </div>`;
+  }).join("");
 }
 
 /* ---------- validación y envío ---------- */
