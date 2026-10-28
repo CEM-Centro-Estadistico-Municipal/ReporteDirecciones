@@ -107,9 +107,21 @@ const CATALOGO = {
   "gob-administracion": {
     sec: "Gobierno", dir: "Dirección de Administración y Servicios",
     indicadores: [
-      { id: "recaudacion", label: "Recaudación por cánones y arriendos", unidad: "pesos" },
-      { id: "cementerio", label: "Trámites de cementerio gestionados", unidad: "cantidad" },
-      { id: "faena", label: "Animales faenados en el Matadero", unidad: "cantidad" }
+      { grupo: "Cementerio", id: "inhumaciones", label: "Inhumaciones realizadas", unidad: "cantidad" },
+      { grupo: "Cementerio", id: "exhumaciones", label: "Exhumaciones realizadas", unidad: "cantidad" },
+      { grupo: "Cementerio", id: "traslados", label: "Traslados realizados", unidad: "cantidad" },
+      { grupo: "Cementerio", id: "cementerio", label: "Trámites administrativos atendidos", unidad: "cantidad" },
+
+      { grupo: "Matadero", id: "faena", label: "Animales faenados", unidad: "cantidad" },
+      { grupo: "Matadero", id: "dias_matadero", label: "Días de funcionamiento", unidad: "cantidad" },
+
+      { grupo: "Malacate", id: "bajadas", label: "Bajadas de embarcaciones", unidad: "cantidad" },
+      { grupo: "Malacate", id: "subidas", label: "Subidas de embarcaciones", unidad: "cantidad" },
+      { grupo: "Malacate", id: "bonificados", label: "Servicios gratuitos o bonificados", unidad: "cantidad" },
+
+      { grupo: "Terminal de Ómnibus", id: "llegadas", label: "Llegadas de ómnibus", unidad: "cantidad" },
+      { grupo: "Terminal de Ómnibus", id: "salidas", label: "Salidas de ómnibus", unidad: "cantidad" },
+      { grupo: "Terminal de Ómnibus", id: "reclamos", label: "Reclamos recibidos", unidad: "cantidad" }
     ]
   },
 
@@ -133,9 +145,26 @@ const CATALOGO = {
   "hac-ingresos": {
     sec: "Hacienda y Finanzas", dir: "Dirección de Ingresos Públicos",
     indicadores: [
-      { id: "cumplimiento", label: "Tasa de cumplimiento tributario", unidad: "porcentaje" },
-      { id: "planes", label: "Planes de pago otorgados", unidad: "cantidad" },
-      { id: "altas_padron", label: "Altas en los padrones impositivos", unidad: "cantidad" }
+      { grupo: "Automotor", id: "lda_automotor", label: "Libres de deuda emitidos", unidad: "cantidad" },
+      { grupo: "Automotor", id: "bajas_automotor", label: "Bajas registradas", unidad: "cantidad" },
+
+      { grupo: "Inmobiliario", id: "lda_inmobiliario", label: "Libres de deuda emitidos", unidad: "cantidad" },
+      { grupo: "Inmobiliario", id: "valuacion_fiscal", label: "Certificados de valuación fiscal emitidos", unidad: "cantidad" },
+
+      { grupo: "Habilitación comercial", id: "habilitaciones", label: "Habilitaciones otorgadas", unidad: "cantidad" },
+      { grupo: "Habilitación comercial", id: "hab_declarativa", label: "Habilitaciones declarativas (60 días)", unidad: "cantidad" },
+      { grupo: "Habilitación comercial", id: "bajas_comercial", label: "Bajas comerciales registradas", unidad: "cantidad" },
+
+      { grupo: "Notificación de deudas", id: "notif_impresas", label: "Notificaciones impresas entregadas", unidad: "cantidad" },
+      { grupo: "Notificación de deudas", id: "notif_whatsapp", label: "Notificaciones enviadas por WhatsApp", unidad: "cantidad" },
+      { grupo: "Notificación de deudas", id: "calles_recorridas", label: "Calles o barrios recorridos", unidad: "cantidad" },
+
+      { grupo: "Eventos", id: "eventos", label: "Eventos realizados", unidad: "cantidad" },
+      { grupo: "Eventos", id: "deuda_eventos", label: "Deuda por eventos pendiente de cobro", unidad: "pesos" },
+
+      { grupo: "Trámites administrativos", id: "consultas_whatsapp", label: "Mensajes respondidos por WhatsApp", unidad: "cantidad" },
+
+      { grupo: "Catastro", id: "inscripciones", label: "Inscripciones de títulos y planos de mensura", unidad: "cantidad" }
     ]
   },
 
@@ -308,7 +337,7 @@ const CATALOGO = {
     sec: "Desarrollo Productivo", dir: "Dirección de Emprendedores",
     indicadores: [
       { id: "emprendedores", label: "Emprendedores acompañados", unidad: "personas" },
-      { id: "formalizados", label: "Emprendimientos formalizados", unidad: "cantidad" },
+      { id: "capacitados", label: "Emprendimientos capacitados", unidad: "cantidad" },
       { id: "ferias", label: "Ferias y paseos organizados", unidad: "cantidad" }
     ]
   },
