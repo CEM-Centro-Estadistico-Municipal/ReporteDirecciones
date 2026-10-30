@@ -129,17 +129,14 @@ const CATALOGO = {
   "hac-tesoreria": {
     sec: "Hacienda y Finanzas", dir: "Tesorería Municipal",
     indicadores: [
-      { id: "ingresos", label: "Ingresos percibidos en el período", unidad: "pesos" },
-      { id: "pagos", label: "Órdenes de pago canceladas", unidad: "cantidad" },
-      { id: "flotante", label: "Deuda flotante al cierre", unidad: "pesos" }
+      { id: "ing_caja_propia", label: "Total de ingresos en caja propia", unidad: "pesos" },
+      { id: "ing_cajas_externas", label: "Total de ingresos en cajas externas", unidad: "pesos" }
     ]
   },
   "hac-contabilidad": {
     sec: "Hacienda y Finanzas", dir: "Dirección de Contabilidad y Administración",
     indicadores: [
-      { id: "ejecucion", label: "Ejecución presupuestaria acumulada", unidad: "porcentaje" },
-      { id: "compras", label: "Procesos de compra cerrados", unidad: "cantidad" },
-      { id: "dias_compra", label: "Días promedio del proceso de compra", unidad: "días" }
+      { id: "ejecucion", label: "Ejecución presupuestaria acumulada", unidad: "porcentaje" }
     ]
   },
   "hac-ingresos": {
