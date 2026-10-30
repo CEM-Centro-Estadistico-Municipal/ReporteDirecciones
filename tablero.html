@@ -100,6 +100,12 @@ td.cel{text-align:center;padding:6px 4px}
 .c-nada{background:var(--rojo-100);color:var(--rojo)}
 .c-pend{background:var(--gris-100);color:var(--gris)}
 .c-sinnov{background:#fff;color:var(--gris);border:1.5px dashed var(--gris-200)}
+.c-nop{background:transparent;color:#b3ada1;border:1px solid var(--gris-100)}
+tr.fila-nop td.dir{color:#9a948a}
+tr.fila-nop td.dir .ref{color:#b3ada1;font-style:italic}
+.cifra.gris{border-top-color:var(--gris-200)}
+.cifra.gris .n{color:var(--gris)}
+.cifra.gris.on{box-shadow:0 0 0 2px var(--gris-200) inset}
 .punto{position:absolute;top:3px;right:4px;width:6px;height:6px;border-radius:50%;
   background:var(--rojo)}
 
@@ -222,6 +228,40 @@ input[type=text]{min-width:180px}
 .delta.igual{background:var(--gris-100);color:var(--gris)}
 .spark{display:block;margin-top:3px}
 .ind-scroll{overflow-x:auto}
+.btn-filtros{display:none;width:100%;background:var(--carta);border:1px solid var(--gris-200);
+  border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:600;color:var(--azul);
+  padding:11px 14px;margin-bottom:16px;cursor:pointer;text-align:left}
+.btn-filtros.activo{color:var(--azul);border-color:var(--azul)}
+.aviso-scroll{display:none;font-size:12px;color:var(--gris);padding:8px 15px 0;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:.03em}
+
+/* ---------- pantallas chicas ---------- */
+@media(max-width:640px){
+  body{font-size:14.5px}
+  .btn-filtros{display:block}
+  .filtros{display:none;margin-top:-6px}
+  .filtros.abierta{display:block}
+  h1{font-size:21px}
+  header{padding:18px 0 20px;margin-bottom:16px}
+  .tabs{gap:0}
+  .tab{padding:9px 11px;font-size:13.5px}
+  .filtros{padding:11px 12px}
+  .f-fila{gap:7px}
+  .f-fila select,.f-fila input[type=text]{flex:1 1 100%;min-width:0}
+  .limpiar{margin-left:0}
+  .chip{font-size:12.5px;padding:5px 11px}
+  .cifras{gap:9px}
+  .cifra .n{font-size:26px}
+  .cifra .l{font-size:11.5px}
+  .g-cab{padding:10px 12px}
+  .g-sub{display:none}
+  .at-row{padding:11px 12px;gap:10px}
+  .traba{padding:13px 14px}
+  .tr-meta{gap:4px;flex-direction:column}
+  .stit h2{font-size:17px}
+  .ind-scroll,.matriz-cont{-webkit-overflow-scrolling:touch}
+  .aviso-scroll{display:block}
+}
 .oculto{display:none!important}
 .vacio{text-align:center;padding:34px 20px;color:var(--gris);font-size:14px;
   background:var(--carta);border:1px solid var(--gris-200);border-radius:var(--r)}
@@ -255,7 +295,8 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
     <button class="tab" data-v="trabas">Trabas abiertas <span class="n" id="tab-tr">0</span></button>
   </div>
 
-  <div class="filtros">
+  <button class="btn-filtros" id="btn-filtros">Filtros y foco <span id="btn-fl">▾</span></button>
+  <div class="filtros" id="caja-filtros">
     <div class="f-fila">
       <span class="f-lbl">Filtrar</span>
       <select id="f-sec"><option value="">Todas las secretarías</option></select>
@@ -295,6 +336,7 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
       <div class="sdesc">El número grande es la cantidad de acciones informadas en el período.
         El color indica únicamente si el reporte llegó y cuándo — no evalúa el contenido.
         El punto rojo señala trabas de criticidad alta.</div>
+      <div class="aviso-scroll">← Deslizá la tabla para ver todos los períodos</div>
       <div class="matriz-cont">
         <table id="matriz"><thead id="m-head"></thead><tbody id="m-body"></tbody></table>
         <div class="refs">
@@ -304,6 +346,7 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
           <div><span class="sw" style="background:var(--rojo-100);border:1px solid var(--rojo)"></span> Sin reporte</div>
           <div><span class="sw" style="background:var(--gris-100);border:1px solid var(--gris-200)"></span> Ventana abierta</div>
           <div><span class="sw" style="background:transparent;border:1px dashed #d8d2c6"></span> Previo al sistema</div>
+          <div><span class="sw" style="background:transparent;border:1px solid var(--gris-100)"></span> Área no operativa</div>
           <div><span class="sw" style="background:var(--rojo);border-radius:50%;width:9px;height:9px"></span> Traba crítica</div>
         </div>
       </div>
@@ -317,6 +360,7 @@ footer{border-top:1px solid var(--gris-200);margin-top:38px;padding-top:20px;
         todos los períodos. Son lo único del reporte que permite comparar una quincena con
         otra. La variación se calcula contra el período anterior con dato cargado; un campo
         vacío significa que el dato no estuvo disponible, no que valga cero.</div>
+      <div class="aviso-scroll">← Deslizá cada tabla para ver todos los períodos</div>
       <div id="indicadores"></div>
     </section>
   </div>
@@ -347,9 +391,35 @@ const N_PERIODOS = 6;
 
 /* Primer período en que el sistema estuvo vigente. Los anteriores no se cuentan
    como incumplimiento: el área no tenía cómo reportar. Formato AAAA-MM-Qn.     */
-const PERIODO_INICIO = "2026-08-Q1";
+const PERIODO_INICIO = "2026-10-Q1";
+
+/* Áreas que todavía no están operativas: sin titular o sin equipo asignado.
+   No tienen actividad que reportar, así que se muestran en gris y quedan
+   fuera de todos los conteos de cumplimiento. Cuando un área se ponga en
+   marcha, basta con sacar su código de esta lista.
+   Fuente: columna "Reporte 1a quincena octubre" = "sin designacion"
+   de la planilla Seguimiento-notas-referentes.                           */
+const NO_OPERATIVAS = [
+  "int-escribania",        /* Escribanía Municipal */
+  "cg-comunicacion",       /* Comunicación Institucional */
+  "cg-psicosocial",        /* Gabinete Psicosocial */
+  "gob-inspeccion",        /* Inspección y Fiscalización */
+  "gob-defensacivil",      /* Defensa Civil */
+  "obr-higieneseguridad",  /* Higiene y Seguridad */
+  "obr-catastro",          /* Catastro y Urbanismo */
+  "sal-interdisciplinario" /* Equipo Interdisciplinario */
+];
 
 let DATOS = null, vista = "resumen", foco = "";
+
+window.addEventListener("error", function(ev){
+  if (document.getElementById("fallo")) return;
+  const d = document.createElement("div");
+  d.id = "fallo"; d.className = "nota ocre";
+  d.innerHTML = "<b>No se pudo cargar el tablero</b>Ocurrió un error al dibujar la vista: " +
+    (ev.message || "desconocido") + ". Probá recargar la página.";
+  document.querySelector(".wrap").prepend(d);
+});
 
 (async function(){
   let d = null;
@@ -369,6 +439,12 @@ function preparar(d){
   d.periodos.forEach(p => p.previo = p.id < PERIODO_INICIO);
   d.vigentes = d.periodos.filter(p => !p.previo).length;
   d.filas.forEach(f => {
+    f.noOperativa = NO_OPERATIVAS.includes(f.codigo);
+    if (f.noOperativa){
+      f.celdas.forEach(c => { c.estado = "no_operativa"; c.sinNovedades = false; c.criticas = 0; });
+      f.rachaSinReporte = 0; f.rachaSinNovedad = 0;
+      return;
+    }
     f.celdas.forEach((c, i) => { if (d.periodos[i].previo) c.estado = "previo"; });
     let rSR = 0, rSN = 0, cA = false, cB = false;
     f.celdas.forEach(c => {
@@ -398,6 +474,13 @@ function montarControles(){
   document.querySelectorAll(".chip").forEach(c => c.onclick = () => {
     foco = (foco === c.dataset.foco) ? "" : c.dataset.foco; sincro(); render();
   });
+  const bf = document.getElementById("btn-filtros"), cf = document.getElementById("caja-filtros");
+  bf.onclick = () => {
+    const ab = cf.classList.toggle("abierta");
+    bf.classList.toggle("activo", ab);
+    document.getElementById("btn-fl").textContent = ab ? "▴" : "▾";
+  };
+
   ["f-sec","f-est"].forEach(id => document.getElementById(id).onchange = render);
   document.getElementById("f-txt").oninput = render;
   document.getElementById("f-clr").onclick = () => {
@@ -422,6 +505,8 @@ function filtrar(){
     if (est === "falta"   && e !== "sin_reporte") return false;
     if (est === "tarde"   && e !== "tarde") return false;
     if (est === "sinnov"  && !c.sinNovedades) return false;
+    if (foco === "nop"      && !f.noOperativa) return false;
+    if (foco !== "nop" && est && f.noOperativa) return false;
     if (foco === "mudas"    && f.rachaSinReporte < 2) return false;
     if (foco === "frias"    && f.rachaSinNovedad < 3) return false;
     if (foco === "falta"    && e !== "sin_reporte") return false;
@@ -468,12 +553,15 @@ function render(){
 }
 
 function pintarCifras(fs){
-  const total = fs.length;
-  const rep   = fs.filter(f => ["en_termino","tarde"].includes(f.celdas[0].estado)).length;
-  const mudas = fs.filter(f => f.rachaSinReporte >= 2).length;
-  const frias = fs.filter(f => f.rachaSinNovedad >= 3).length;
+  /* las áreas no operativas quedan fuera de todos los denominadores */
+  const act   = fs.filter(f => !f.noOperativa);
+  const nop   = fs.length - act.length;
+  const total = act.length;
+  const rep   = act.filter(f => ["en_termino","tarde"].includes(f.celdas[0].estado)).length;
+  const mudas = act.filter(f => f.rachaSinReporte >= 2).length;
+  const frias = act.filter(f => f.rachaSinNovedad >= 3).length;
   const crit  = DATOS.trabas.filter(t => t.criticidad === "Alta" &&
-                  fs.some(f => f.direccion === t.direccion)).length;
+                  act.some(f => f.direccion === t.direccion)).length;
   const c = (id, cls, n, sub, lbl) => `<button class="cifra ${cls} ${foco===id?"on":""}" data-foco="${id}">
       <div class="n">${n}${sub||""}</div><div class="l">${lbl}</div></button>`;
   document.getElementById("cifras").innerHTML =
@@ -481,7 +569,8 @@ function pintarCifras(fs){
       "Direcciones que reportaron el período en curso") +
     c("mudas", mudas ? "rojo" : "", mudas, "", "Áreas sin reportar dos períodos seguidos o más") +
     c("frias", frias ? "ambar" : "", frias, "", "Áreas sin novedades destacadas hace tres períodos") +
-    c("criticas", crit ? "rojo" : "", crit, "", "Trabas de criticidad alta sin cerrar");
+    c("criticas", crit ? "rojo" : "", crit, "", "Trabas de criticidad alta sin cerrar") +
+    (nop ? c("nop", "gris", nop, "", "Áreas no operativas, excluidas de los conteos") : "");
   document.querySelectorAll(".cifra").forEach(b => b.onclick = () => {
     foco = (foco === b.dataset.foco) ? "" : b.dataset.foco; sincro(); render();
   });
@@ -557,7 +646,9 @@ function pintarMatriz(fs){
   Object.keys(porSec).forEach(sec => {
     html += `<tr class="sec-fila"><td colspan="${DATOS.periodos.length + 2}">${esc(sec)}</td></tr>`;
     porSec[sec].forEach(f => {
-      html += `<tr><td class="dir">${esc(f.direccion)}${f.referente ? `<span class="ref">${esc(f.referente)}</span>` : ""}</td>
+      html += `<tr class="${f.noOperativa ? "fila-nop" : ""}"><td class="dir">${esc(f.direccion)}${
+          f.noOperativa ? `<span class="ref">sin designación — área no operativa</span>`
+                        : (f.referente ? `<span class="ref">${esc(f.referente)}</span>` : "")}</td>
         ${f.celdas.map(celda).join("")}<td class="racha">${rachaTag(f)}</td></tr>`;
     });
   });
@@ -677,6 +768,7 @@ function pintarTrabas(tr){
 }
 
 function celda(c){
+  if (c.estado === "no_operativa") return `<td class="cel"><span class="celda c-nop">·<small>no oper.</small></span></td>`;
   if (c.estado === "previo")      return `<td class="cel"><span class="celda c-previo">·<small>—</small></span></td>`;
   if (c.estado === "pendiente")   return `<td class="cel"><span class="celda c-pend">·<small>abierto</small></span></td>`;
   if (c.estado === "sin_reporte") return `<td class="cel"><span class="celda c-nada">—<small>sin rep.</small></span></td>`;
@@ -686,6 +778,7 @@ function celda(c){
     ${c.criticas ? '<span class="punto"></span>' : ""}</span></td>`;
 }
 function rachaTag(f){
+  if (f.noOperativa) return `<span class="tag g">no oper.</span>`;
   if (f.rachaSinReporte >= 2) return `<span class="tag r">${f.rachaSinReporte} sin rep.</span>`;
   if (f.rachaSinNovedad >= 3) return `<span class="tag a">${f.rachaSinNovedad} sin nov.</span>`;
   return `<span class="tag g">—</span>`;
