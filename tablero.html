@@ -335,6 +335,25 @@ button.cifra:active{transform:scale(.98)}
 }
 .ver-resto:hover{background:var(--blue-50); border-style:solid; border-color:var(--brand)}
 .ver-resto:active{transform:scale(.98)}
+/* notas del CEM */
+th.nt{min-width:200px}
+td.nt{font-size:12px; line-height:1.4; color:var(--ink-600); max-width:300px;
+  text-align:left; vertical-align:top}
+.nt-txt{display:block}
+.nt-fe{display:block; font-size:10.5px; color:var(--ink-300); margin-top:2px}
+.gab-grupo.azul{color:var(--brand-700); background:var(--blue-50)}
+.g-notas{display:flex; flex-direction:column; gap:7px; padding-bottom:4px}
+.g-nota{
+  font-size:12.5px; line-height:1.45; color:var(--ink-700);
+  background:var(--blue-50); border:1px solid var(--blue-100);
+  border-radius:var(--r-sm); padding:9px 12px;
+}
+.g-nota b{
+  display:block; font-family:var(--f-head); font-weight:800; font-size:12.5px;
+  color:var(--brand-900); margin-bottom:1px;
+}
+.g-nota i{display:block; font-style:normal; font-size:11px; color:var(--ink-400); margin-top:3px}
+
 .vacio{
   font-size:13.5px; color:var(--ink-500); padding:26px 0; text-align:center;
   background:#fff; border:1px dashed var(--ink-200); border-radius:var(--r);
@@ -1008,6 +1027,13 @@ function pintarGabinete(fs){
     ? `<div class="g-lista">${lista.map(f =>
         `<span class="pill ${cls}">${esc(f.direccion)}</span>`).join("")}</div>` : "";
 
+  const conNota = fs.filter(f => f.nota && !f.noOperativa);
+  const bloqueNotas = conNota.length ? `
+    <div class="gab-grupo azul">Notas del CEM · ${conNota.length}</div>
+    <div class="g-notas">${conNota.map(f => `
+      <div class="g-nota"><b>${esc(f.direccion)}</b>${esc(f.nota)}${
+        f.notaFecha ? `<i>${esc(f.notaFecha)}</i>` : ""}</div>`).join("")}</div>` : "";
+
   document.getElementById("g-areas").innerHTML =
     (grupo.informaron.length
       ? `<div class="gab-grupo verde">Informaron · ${grupo.informaron.length}</div>` +
@@ -1017,7 +1043,8 @@ function pintarGabinete(fs){
           grupo.faltan.length}</div>` + pastilla(grupo.faltan, "a") : "") +
     (grupo.noOp.length
       ? `<div class="gab-grupo gris">Áreas no operativas · ${grupo.noOp.length}</div>` +
-        pastilla(grupo.noOp, "g") : "");
+        pastilla(grupo.noOp, "g") : "") +
+    bloqueNotas;
 
   /* ---------- pie ---------- */
   const pie = document.getElementById("g-pie");
@@ -1116,14 +1143,16 @@ function columnas(){
   return (ix.length ? ix : DATOS.periodos.map((p, i) => i)).reverse();
 }
 
+const hayNotas = fs => fs.some(f => f.nota);
+
 function pintarMatriz(fs){
-  const cols = columnas(), nc = cols.length + 2;
+  const cols = columnas(), conNota = hayNotas(fs), nc = cols.length + 2 + (conNota ? 1 : 0);
   document.getElementById("c-mx").textContent = fs.length + " de " + DATOS.filas.length;
   document.getElementById("m-head").innerHTML = `<tr><th>Dirección</th>
       ${cols.map(i => { const p = DATOS.periodos[i];
         return `<th class="per">${esc(p.corto.replace(" quincena de "," q. "))}<span>${
           p.abierto ? "abierto" : "cerrado"}</span></th>`; }).join("")}
-      <th class="per">Racha</th></tr>`;
+      <th class="per">Racha</th>${hayNotas(fs) ? `<th class="nt">Nota del CEM</th>` : ""}</tr>`;
   if (!fs.length) {
     document.getElementById("m-body").innerHTML =
       `<tr><td colspan="${nc}" style="text-align:center;padding:30px;color:var(--gris)">No hay direcciones que coincidan con los filtros.</td></tr>`;
@@ -1138,7 +1167,9 @@ function pintarMatriz(fs){
       html += `<tr class="${f.noOperativa ? "fila-nop" : ""}"><td class="dir">${esc(f.direccion)}${
           f.noOperativa ? `<span class="ref">sin designación — área no operativa</span>`
                         : (f.referente ? `<span class="ref">${esc(f.referente)}</span>` : "")}</td>
-        ${cols.map(i => celda(f.celdas[i])).join("")}<td class="racha">${rachaTag(f)}</td></tr>`;
+        ${cols.map(i => celda(f.celdas[i])).join("")}<td class="racha">${rachaTag(f)}</td>${
+          conNota ? `<td class="nt">${f.nota ? `<span class="nt-txt">${esc(f.nota)}</span>${
+            f.notaFecha ? `<span class="nt-fe">${esc(f.notaFecha)}</span>` : ""}` : ""}</td>` : ""}</tr>`;
     });
   });
   document.getElementById("m-body").innerHTML = html;
