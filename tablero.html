@@ -340,49 +340,62 @@ button.cifra:active{transform:scale(.98)}
   background:#fff; border:1px dashed var(--ink-200); border-radius:var(--r);
 }
 
-/* ====================== atención (vista Resumen) ========================= */
+/* ====================== atención (vista Resumen) =========================
+   Estructura real: .atencion > .grupo > button.g-cab + .g-cuerpo(.oculto)
+   El botón abre y cierra; la clase .abierto vive en el botón.            */
 .atencion{
   background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
   overflow:hidden; box-shadow:var(--sh);
 }
-.at-row{
-  display:flex; gap:14px; padding:15px 18px; border-bottom:1px solid var(--ink-100);
-  align-items:flex-start;
-}
-.at-row:last-child{border-bottom:none}
-.at-marca{flex:0 0 4px; align-self:stretch; border-radius:var(--pill); background:var(--ink-300)}
-.at-row.rojo .at-marca{background:var(--rojo)}
-.at-row.ambar .at-marca{background:var(--sun)}
-.at-row.verde .at-marca{background:var(--verde)}
-.at-txt{flex:1; min-width:0}
-.at-tit{font-family:var(--f-head); font-weight:800; font-size:14.5px; display:block}
-.at-sec{font-size:12.5px; color:var(--ink-500)}
-.at-meta{font-size:12px; color:var(--ink-400); margin-top:3px}
-.at-tipo{
-  font-family:var(--f-head); font-weight:800; font-size:10px; letter-spacing:.13em;
-  text-transform:uppercase; color:var(--ink-400);
-}
-.at-cuerpo{padding:0}
-.grupo{cursor:pointer}
+.grupo + .grupo{border-top:1px solid var(--ink-100)}
+
 .g-cab{
-  display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer;
-  border-bottom:1px solid var(--ink-100); transition:background .15s;
+  display:flex; width:100%; align-items:center; gap:13px; padding:15px 18px;
+  background:#fff; border:0; text-align:left; cursor:pointer;
+  font-family:inherit; color:inherit; transition:background .15s;
 }
 .g-cab:hover{background:var(--blue-50)}
-.g-marca{flex:0 0 4px; height:30px; border-radius:var(--pill); background:var(--ink-300)}
-.grupo.rojo .g-marca{background:var(--rojo)}
-.grupo.ambar .g-marca{background:var(--sun)}
-.g-txt{flex:1; min-width:0}
-.g-tit{font-family:var(--f-head); font-weight:800; font-size:14.5px; display:block}
-.g-sub{display:block; font-size:12.5px; color:var(--ink-500); margin-top:1px}
-.g-n{
-  font-family:var(--f-head); font-weight:800; font-size:12px; color:#fff;
-  background:var(--ink-400); padding:2px 10px; border-radius:var(--pill);
+.g-cab:active{background:var(--blue-100)}
+.g-marca{
+  flex:0 0 4px; align-self:stretch; min-height:32px; border-radius:var(--pill);
+  background:var(--ink-300);
 }
-.grupo.rojo .g-n{background:var(--rojo)} .grupo.ambar .g-n{background:var(--sun); color:var(--ink)}
-.g-fl{color:var(--ink-400); font-size:13px; transition:transform .2s var(--ease)}
-.grupo.abierto .g-fl{transform:rotate(180deg)}
-.g-cuerpo{display:none} .grupo.abierto .g-cuerpo{display:block}
+.g-marca.r{background:var(--rojo)} .g-marca.a{background:var(--sun)}
+.g-txt{flex:1; min-width:0}
+.g-tit{
+  font-family:var(--f-head); font-weight:800; font-size:15px; display:block;
+  color:var(--ink); letter-spacing:-.01em;
+}
+.g-sub{display:block; font-size:12.5px; color:var(--ink-500); margin-top:2px; line-height:1.4}
+.g-n{
+  font-family:var(--f-head); font-weight:800; font-size:12px; color:var(--brand-700);
+  background:var(--blue-50); padding:3px 11px; border-radius:var(--pill); flex:0 0 auto;
+}
+.g-fl{
+  color:var(--ink-300); font-size:11px; flex:0 0 auto;
+  transition:transform .2s var(--ease); transform:rotate(90deg);
+}
+.g-cab.abierto .g-fl{transform:rotate(-90deg); color:var(--brand)}
+.g-cuerpo{background:var(--ink-50); border-top:1px solid var(--ink-100)}
+
+.at-row{
+  display:flex; gap:13px; padding:14px 18px; align-items:stretch;
+  border-bottom:1px solid var(--ink-200);
+}
+.at-row:last-child{border-bottom:none}
+.at-marca{flex:0 0 3px; border-radius:var(--pill); background:var(--ink-300)}
+.at-marca.r{background:var(--rojo)} .at-marca.a{background:var(--sun)}
+.at-cuerpo{flex:1; min-width:0}
+.at-sec{
+  font-family:var(--f-head); font-weight:800; font-size:9.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-400);
+}
+.at-tit{
+  font-family:var(--f-head); font-weight:800; font-size:14.5px; display:block;
+  color:var(--ink); margin:1px 0 3px;
+}
+.at-txt{font-size:13px; line-height:1.45; color:var(--ink-700)}
+.at-meta{font-size:12px; color:var(--ink-500); margin-top:5px}
 
 /* ============================ matriz ==================================== */
 .matriz-cont{
@@ -515,7 +528,8 @@ footer{
   .f-pide b,.f-quien b{flex:none; padding-top:0}
   .stit h2{font-size:17px}
   .sdesc{font-size:12.5px}
-  .at-row,.g-cab{padding:13px 14px; gap:11px}
+  .at-row,.g-cab{padding:13px 14px; gap:10px}
+  .g-tit{font-size:14px} .g-sub{font-size:12px}
   .traba{padding:13px 14px}
   .tr-meta{gap:5px; flex-direction:column}
   .aviso-scroll{display:block}
