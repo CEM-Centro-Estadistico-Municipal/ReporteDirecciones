@@ -335,6 +335,40 @@ button.cifra:active{transform:scale(.98)}
 }
 .ver-resto:hover{background:var(--blue-50); border-style:solid; border-color:var(--brand)}
 .ver-resto:active{transform:scale(.98)}
+/* ---------------------- botones de contacto ---------------------- */
+.bc-fila{
+  display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center;
+  margin-top:12px; padding-top:11px; border-top:1px solid var(--ink-100);
+}
+.bc-gr{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.bc-lbl{
+  font-family:var(--f-head); font-weight:800; font-size:9.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-400);
+}
+.bc{
+  display:inline-flex; align-items:center; gap:5px; font-family:var(--f-head);
+  font-weight:700; font-size:12px; padding:5px 13px; border-radius:var(--pill);
+  text-decoration:none; border:1.5px solid transparent;
+  transition:all .16s var(--ease); white-space:nowrap;
+}
+.bc::before{font-size:11px}
+.bc.wa{background:#e9f7ee; color:#1b7a43; border-color:#bfe6cf}
+.bc.wa::before{content:"✆"}
+.bc.wa:hover{background:#2faa5a; color:#fff; border-color:#2faa5a}
+.bc.mail{background:var(--blue-50); color:var(--brand-700); border-color:var(--blue-200)}
+.bc.mail::before{content:"✉"}
+.bc.mail:hover{background:var(--brand); color:#fff; border-color:var(--brand)}
+.bc:active{transform:scale(.97)}
+.bc.off{
+  font-size:11px; font-weight:600; color:var(--ink-400); background:transparent;
+  border:1px dashed var(--ink-200); cursor:default;
+}
+@media(max-width:560px){
+  .bc-fila{gap:7px 10px}
+  .bc-gr{width:100%}
+  .bc-lbl{flex:0 0 100%}
+}
+
 /* notas del CEM */
 th.nt{min-width:200px}
 td.nt{font-size:12px; line-height:1.4; color:var(--ink-600); max-width:300px;
@@ -907,6 +941,78 @@ function frenosFiltrados(){
   });
 }
 
+/* ==========================================================================
+   CONTACTO — convierte el tablero en punto de partida de una acción.
+   Los datos salen de la hoja Referentes; si un área no tiene teléfono o
+   correo cargado, ese botón no se dibuja.
+   ========================================================================== */
+
+/* "Quién resuelve" es una etiqueta del formulario; acá se traduce al área
+   del catálogo para poder escribirle. Lo que no esté en esta tabla no
+   genera botón. */
+const RESUELVE_A = {
+  "Contabilidad y Administración (compras)": "hac-contabilidad",
+  "Tesorería Municipal (pagos)":             "hac-tesoreria",
+  "Recursos Humanos y Personal":             "cg-rrhh",
+  "Coordinación General":                    "cg-planificacion",
+  "Obras y Servicios Públicos":              "obr-subsecretaria",
+  "Servicios Públicos":                      "obr-servicios",
+  "Salud Pública":                           "sal-saludpublica",
+  "Asesoría Letrada":                        "int-letrada"
+};
+
+const areaPorCodigo = cod => (DATOS.filas || []).find(f => f.codigo === cod);
+
+/* 3777-574293 · 3777 720914 · 11 5585 3242  ->  54 9 … para wa.me */
+function aWhatsapp(tel){
+  let d = String(tel || "").replace(/\D/g, "");
+  if (!d) return "";
+  if (d.startsWith("54")) d = d.slice(2);
+  if (d.startsWith("9"))  d = d.slice(1);
+  if (d.startsWith("0"))  d = d.slice(1);
+  if (d.length < 8 || d.length > 11) return "";
+  return "549" + d;
+}
+
+/* botonera de contacto para un área */
+function contacto(cod, asunto, cuerpo, etiqueta){
+  const a = areaPorCodigo(cod);
+  if (!a) return "";
+  const wa = aWhatsapp(a.telefono);
+  const quien = a.referente || a.direccion;
+  const txt = encodeURIComponent(cuerpo.replace("{nombre}", quien));
+  const bot = [];
+
+  if (wa) bot.push(`<a class="bc wa" target="_blank" rel="noopener"
+      href="https://wa.me/${wa}?text=${txt}">WhatsApp</a>`);
+  if (a.email) bot.push(`<a class="bc mail"
+      href="mailto:${a.email}?subject=${
+        encodeURIComponent(asunto)}&body=${txt}">Correo</a>`);
+  if (!bot.length) return `<span class="bc off" title="El área no tiene contacto cargado">${
+      esc(etiqueta)}: sin contacto</span>`;
+
+  return `<span class="bc-gr"><span class="bc-lbl">${esc(etiqueta)}</span>${bot.join("")}</span>`;
+}
+
+function barraContacto(f){
+  const resumen = f.resumen || f.descripcion || "";
+  const cuerpoArea =
+    `Hola {nombre}, te escribo por el Reporte Quincenal de Gestión.\n\n` +
+    `Sobre lo que informó ${f.direccion}: "${resumen}"\n\n` +
+    `Quisiera que lo veamos. ¿Cuándo podés?`;
+  const codR = RESUELVE_A[(f.quien || "").trim()];
+  const cuerpoR =
+    `Hola {nombre}, te escribo por el Reporte Quincenal de Gestión.\n\n` +
+    `${f.direccion} informó un freno que depende de tu área: "${resumen}"\n\n` +
+    `Pide: ${f.pedido || "—"}\n\n¿Cómo lo destrabamos?`;
+
+  const a = contacto(f.codigo, "Reporte quincenal · " + f.direccion, cuerpoArea, "Al área");
+  const r = codR && codR !== f.codigo
+    ? contacto(codR, "Reporte quincenal · pedido de " + f.direccion, cuerpoR, "A quien resuelve")
+    : "";
+  return (a || r) ? `<div class="bc-fila">${a}${r}</div>` : "";
+}
+
 function pintarGabinete(fs){
   const sec = document.getElementById("f-sec").value;
   const per = DATOS.periodos[0];
@@ -999,6 +1105,7 @@ function pintarGabinete(fs){
           <div class="f-quien">${f.quien
             ? `<b>Resuelve</b>${esc(f.quien)}`
             : `<span class="sin">Sin destinatario indicado</span>`}</div>
+          ${barraContacto(f)}
         </article>`;
     });
     if (abrioResto) html += `</div>`;
@@ -1283,6 +1390,7 @@ function pintarTrabas(tr){
           <span>Trabado hace: <b>${esc(t.antiguedad || "—")}</b></span>
           <span>Reportado en: <b>${esc(t.periodo)}</b></span>
         </div>
+        ${barraContacto(t)}
       </div>`).join("")
     : `<div class="vacio">No hay trabas abiertas con los filtros aplicados.</div>`;
 }
