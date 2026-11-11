@@ -1,1372 +1,379 @@
-<!DOCTYPE html>
-<html lang="es-AR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tablero de gestión · Gobierno de Esquina</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@600;700;800;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
-<style>
-/* ==========================================================================
-   Tablero de gestión · Gobierno de Esquina
-   Sistema de diseño municipal: azul cielo, Anton en los titulares,
-   tarjetas blancas con barra de acento y sombras azuladas.
+/* ============================================================================
+   CATÁLOGO DE UNIDADES REPORTANTES
+   Fuente: Anexo II — Manual de Funciones del Departamento Ejecutivo Municipal
+           (Ordenanza de Reordenamiento Administrativo Integral) + Organigrama
+           Municipal, Departamento Ejecutivo Municipal.
+   Las denominaciones NO deben modificarse sin actualizar el Anexo II.
+
+   indicadores: hasta 3 por dirección. Se repiten idénticos todos los períodos.
+                Son los que construyen serie temporal. Validarlos con cada
+                director en la reunión de puesta en marcha.
    ========================================================================== */
-:root{
-  --brand:#1fa3ec; --brand-400:#40b2f4; --brand-600:#0f8bd6; --brand-700:#0f72b0;
-  --brand-900:#143f5e;
-  --blue-50:#ecf8ff; --blue-100:#d4eefe; --blue-200:#aadcfb; --blue-300:#74c5f6;
-  --ink:#111418; --ink-700:#38434f; --ink-600:#54616e; --ink-500:#6f7c89;
-  --ink-400:#9aa6b2; --ink-300:#c4ccd4; --ink-200:#e1e7ec; --ink-100:#eef2f6;
-  --ink-50:#f6f9fb; --white:#fff;
-  --sun:#fbb912; --sun-300:#fadd5c; --sun-50:#fef6d6;
-  --verde:#2faa5a; --verde-50:#e8f6ee;
-  --rojo:#e0413c;  --rojo-50:#fdeceb;
-  --ambar:#f0a821; --ambar-50:#fdf3e0;
-  /* alias heredados */
-  --azul:var(--brand-900); --azul-600:var(--brand-600); --azul-100:var(--blue-100);
-  --ocre:#d08a00; --ocre-100:var(--sun-50);
-  --gris:var(--ink-600); --gris-100:var(--ink-100); --gris-200:var(--ink-200);
-  --tinta:var(--ink); --carta:var(--white); --papel:var(--blue-50);
-  --rojo-100:var(--rojo-50); --verde-100:var(--verde-50); --ambar-100:var(--ambar-50);
-  --r:18px; --r-sm:12px; --pill:999px;
-  --sh:0 2px 10px rgba(20,63,94,.07);
-  --sh-md:0 8px 24px rgba(20,63,94,.11);
-  --sh-lg:0 16px 40px rgba(20,63,94,.15);
-  --sh-brand:0 8px 22px rgba(31,163,236,.28);
-  --ease:cubic-bezier(.22,1,.36,1);
-  --f-disp:'Anton','Archivo',system-ui,sans-serif;
-  --f-head:'Archivo',system-ui,sans-serif;
-  --f-body:'Nunito Sans',system-ui,-apple-system,sans-serif;
-}
 
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0; font-family:var(--f-body); color:var(--ink);
-  background:var(--blue-50); font-size:15px; line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
-.wrap{max-width:1180px; margin:0 auto; padding:0 20px}
-.oculto{display:none !important}
+const CATALOGO = {
 
-/* ---------------------------- encabezado ------------------------------- */
-header{
-  background:linear-gradient(135deg,var(--brand) 0%,var(--brand-600) 58%,var(--brand-700) 100%);
-  color:#fff; padding:22px 0 26px; position:relative; overflow:hidden;
-}
-header::after{
-  content:""; position:absolute; right:-70px; top:-90px;
-  width:290px; height:290px; border-radius:50%;
-  background:rgba(255,255,255,.08); pointer-events:none;
-}
-.h-marca{display:flex; align-items:center; gap:11px; margin-bottom:16px}
-.h-emb{width:40px; height:40px; border-radius:50%; background:#fff; flex:0 0 40px;
-  display:block; box-shadow:0 2px 10px rgba(0,0,0,.12)}
-.h-wm{line-height:1}
-.h-wm b{display:block; font-family:var(--f-disp); font-size:19px; letter-spacing:.055em}
-.h-wm span{display:block; font-family:var(--f-head); font-weight:600; font-size:9.5px;
-  letter-spacing:.3em; opacity:.85; margin-top:1px}
-h1{
-  font-family:var(--f-disp); font-size:clamp(28px,6.2vw,46px); line-height:1;
-  letter-spacing:.005em; margin:0; text-transform:uppercase;
-}
-h1 em{font-style:normal; background:var(--ink); color:#fff;
-  padding:0 .18em .07em; border-radius:7px; display:inline-block}
-.kicker{
-  font-family:var(--f-head); font-weight:700; font-size:10.5px; letter-spacing:.2em;
-  text-transform:uppercase; opacity:.9; margin-bottom:7px;
-}
-.hsub{font-size:13.5px; margin-top:10px; color:rgba(255,255,255,.9)}
-.hsub b{font-weight:800}
+  /* ---------- INTENDENCIA — dependencias directas ---------- */
+  "int-privada": {
+    sec: "Intendencia", dir: "Secretaría Privada",
+    indicadores: [
+      { id: "audiencias", label: "Audiencias oficiales registradas", unidad: "cantidad" },
+      { id: "actos", label: "Actos institucionales coordinados", unidad: "cantidad" },
+      { id: "correspondencia", label: "Notas y memorándums tramitados", unidad: "cantidad" }
+    ]
+  },
+  "int-letrada": {
+    sec: "Intendencia", dir: "Asesoría Letrada",
+    indicadores: [
+      { id: "dictamenes", label: "Dictámenes emitidos", unidad: "cantidad" },
+      { id: "juicios", label: "Causas judiciales activas", unidad: "cantidad" },
+      { id: "omic", label: "Reclamos OMIC recibidos", unidad: "cantidad" }
+    ]
+  },
+  "int-escribania": {
+    sec: "Intendencia", dir: "Escribanía Municipal",
+    indicadores: [
+      { id: "escrituras", label: "Escrituras y actas autorizadas", unidad: "cantidad" },
+      { id: "certificaciones", label: "Certificaciones y autenticaciones", unidad: "cantidad" }
+    ]
+  },
 
-/* ------------------------------ pestañas -------------------------------- */
-.tabs{
-  display:flex; gap:7px; margin:18px 0 14px; overflow-x:auto;
-  scrollbar-width:none; -webkit-overflow-scrolling:touch; padding-bottom:2px;
-}
-.tabs::-webkit-scrollbar{display:none}
-.tab{
-  font-family:var(--f-head); font-weight:700; font-size:13.5px; white-space:nowrap;
-  padding:9px 17px; border-radius:var(--pill); border:1.5px solid transparent;
-  background:#fff; color:var(--ink-600); cursor:pointer;
-  transition:all .18s var(--ease); box-shadow:var(--sh);
-}
-.tab:hover{color:var(--brand-700); transform:translateY(-1px)}
-.tab:active{transform:scale(.97)}
-.tab.on{background:var(--brand); color:#fff; box-shadow:var(--sh-brand)}
-.tab .n{
-  display:inline-block; margin-left:6px; font-size:11px; font-weight:800;
-  background:var(--ink-100); color:var(--ink-600); padding:1px 7px; border-radius:var(--pill);
-}
-.tab.on .n{background:rgba(255,255,255,.25); color:#fff}
+  /* ---------- 3 · COORDINACIÓN GENERAL ---------- */
+  "cg-cem": {
+    sec: "Coordinación General", dir: "Centro Estadístico Municipal (CEM)",
+    indicadores: [
+      { id: "productos", label: "Productos estadísticos entregados", unidad: "cantidad" },
+      { id: "pedidos", label: "Pedidos de información atendidos", unidad: "cantidad" },
+      { id: "relevamientos", label: "Relevamientos en campo", unidad: "cantidad" }
+    ]
+  },
+  "cg-planificacion": {
+    sec: "Coordinación General", dir: "Dirección de Planificación y Modernización",
+    indicadores: [
+      { id: "tramites_dig", label: "Trámites digitalizados acumulados", unidad: "cantidad" },
+      { id: "tickets", label: "Tickets de soporte informático resueltos", unidad: "cantidad" },
+      { id: "procesos", label: "Procesos rediseñados", unidad: "cantidad" }
+    ]
+  },
+  "cg-comunicacion": {
+    sec: "Coordinación General", dir: "Dirección de Comunicación Institucional",
+    indicadores: [
+      { id: "piezas", label: "Piezas producidas", unidad: "cantidad" },
+      { id: "coberturas", label: "Coberturas de actos y operativos", unidad: "cantidad" },
+      { id: "gacetillas", label: "Gacetillas enviadas a medios", unidad: "cantidad" }
+    ]
+  },
+  "cg-rrhh": {
+    sec: "Coordinación General", dir: "Dirección de Recursos Humanos y Personal",
+    indicadores: [
+      { id: "movimientos", label: "Movimientos de personal procesados", unidad: "cantidad" },
+      { id: "ausentismo", label: "Tasa de ausentismo del período", unidad: "porcentaje" },
+      { id: "capacitados", label: "Agentes capacitados", unidad: "personas" }
+    ]
+  },
+  "cg-psicosocial": {
+    sec: "Coordinación General", dir: "Gabinete Psicosocial",
+    indicadores: [
+      { id: "casos_nuevos", label: "Casos nuevos abiertos", unidad: "cantidad" },
+      { id: "casos_activos", label: "Casos activos en seguimiento", unidad: "cantidad" },
+      { id: "casos_cerrados", label: "Casos cerrados", unidad: "cantidad" }
+    ]
+  },
 
-/* ------------------------------ filtros --------------------------------- */
-.btn-filtros{
-  display:none; width:100%; font-family:var(--f-head); font-weight:700; font-size:13.5px;
-  padding:10px 16px; border-radius:var(--pill); border:1.5px solid var(--blue-200);
-  background:#fff; color:var(--brand-700); cursor:pointer; margin-bottom:10px;
-  box-shadow:var(--sh);
-}
-.btn-filtros.activo{background:var(--brand); color:#fff; border-color:var(--brand)}
-.filtros{
-  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
-  padding:13px 16px; margin-bottom:18px; box-shadow:var(--sh);
-}
-.f-fila{display:flex; flex-wrap:wrap; gap:9px; align-items:center}
-.f-fila + .f-fila{margin-top:10px; padding-top:11px; border-top:1px solid var(--ink-100)}
-.f-lbl{
-  font-family:var(--f-head); font-weight:800; font-size:10px; letter-spacing:.17em;
-  text-transform:uppercase; color:var(--ink-400);
-}
-.f-fila select,.f-fila input[type=text]{
-  font-family:var(--f-body); font-size:13.5px; color:var(--ink);
-  padding:8px 13px; border:1.5px solid var(--ink-200); border-radius:var(--pill);
-  background:#fff; outline:none; transition:border-color .16s;
-}
-.f-fila select:focus,.f-fila input:focus{border-color:var(--brand)}
-.f-fila input[type=text]{flex:1 1 200px; min-width:150px}
-.limpiar{
-  margin-left:auto; background:none; border:0; color:var(--brand-700); cursor:pointer;
-  font-family:var(--f-head); font-weight:700; font-size:12.5px; text-decoration:underline;
-}
-.chip{
-  font-family:var(--f-head); font-weight:700; font-size:12.5px; padding:6px 14px;
-  border-radius:var(--pill); border:1.5px solid var(--ink-200); background:#fff;
-  color:var(--ink-600); cursor:pointer; transition:all .16s var(--ease);
-}
-.chip:hover{border-color:var(--brand-400); color:var(--brand-700)}
-.chip:active{transform:scale(.97)}
-.chip.on{background:var(--brand); border-color:var(--brand); color:#fff}
-.chip.r.on{background:var(--rojo); border-color:var(--rojo)}
-.chip.a.on{background:var(--ambar); border-color:var(--ambar); color:var(--ink)}
+  /* ---------- 4 · GOBIERNO ---------- */
+  "gob-seguridad": {
+    sec: "Gobierno", dir: "Dirección de Seguridad Urbana y Vial",
+    indicadores: [
+      { id: "operativos", label: "Operativos de tránsito y alcoholemia", unidad: "cantidad" },
+      { id: "actas", label: "Actas de infracción labradas", unidad: "cantidad" },
+      { id: "accidentes", label: "Accidentes registrados en el período", unidad: "cantidad" }
+    ]
+  },
+  "gob-inspeccion": {
+    sec: "Gobierno", dir: "Dirección de Inspección y Fiscalización",
+    indicadores: [
+      { id: "inspecciones", label: "Inspecciones realizadas", unidad: "cantidad" },
+      { id: "habilitaciones", label: "Habilitaciones comerciales tramitadas", unidad: "cantidad" },
+      { id: "clausuras", label: "Clausuras y sanciones aplicadas", unidad: "cantidad" }
+    ]
+  },
+  "gob-defensacivil": {
+    sec: "Gobierno", dir: "Dirección de Defensa Civil",
+    indicadores: [
+      { id: "intervenciones", label: "Intervenciones ante emergencias", unidad: "cantidad" },
+      { id: "personas", label: "Personas asistidas", unidad: "personas" },
+      { id: "capacitaciones", label: "Simulacros y capacitaciones", unidad: "cantidad" }
+    ]
+  },
+  "gob-administracion": {
+    sec: "Gobierno", dir: "Dirección de Administración y Servicios",
+    indicadores: [
+      { grupo: "Cementerio", id: "inhumaciones", label: "Inhumaciones realizadas", unidad: "cantidad" },
+      { grupo: "Cementerio", id: "exhumaciones", label: "Exhumaciones realizadas", unidad: "cantidad" },
+      { grupo: "Cementerio", id: "traslados", label: "Traslados realizados", unidad: "cantidad" },
+      { grupo: "Cementerio", id: "cementerio", label: "Trámites administrativos atendidos", unidad: "cantidad" },
 
-/* ------------------------------- notas ---------------------------------- */
-.nota{
-  border-radius:var(--r); padding:13px 17px; margin-bottom:16px; font-size:13.5px;
-  line-height:1.5; background:#fff; border:1px solid var(--ink-200); box-shadow:var(--sh);
-  border-top:4px solid var(--ink-300);
-}
-.nota b{display:block; font-family:var(--f-head); font-weight:800; margin-bottom:2px}
-.nota.azul{border-top-color:var(--brand); background:var(--blue-50); border-color:var(--blue-200)}
-.nota.azul b{color:var(--brand-700)}
-.nota.ocre{border-top-color:var(--sun); background:var(--sun-50); border-color:#f5e2a8}
-.nota.ocre b{color:#8a6410}
+      { grupo: "Matadero", id: "faena", label: "Animales faenados", unidad: "cantidad" },
+      { grupo: "Matadero", id: "dias_matadero", label: "Días de funcionamiento", unidad: "cantidad" },
 
-/* ------------------------------ secciones ------------------------------- */
-section{margin-bottom:30px}
-/* Los títulos de sección viajan en una pastilla, para que no queden
-   flotando en negro sobre el fondo. */
-.stit{
-  display:inline-flex; align-items:center; gap:9px; margin-bottom:12px;
-  padding:7px 16px 7px 13px; border-radius:var(--pill);
-  background:#fff; border:1px solid var(--blue-100); box-shadow:var(--sh);
-}
-.stit::before{
-  content:""; flex:0 0 8px; width:8px; height:8px; border-radius:50%;
-  background:var(--brand); box-shadow:0 0 0 3px var(--blue-100);
-}
-.stit h2{
-  font-family:var(--f-head); font-weight:800; font-size:15.5px; margin:0;
-  letter-spacing:-.005em; color:var(--brand-900);
-}
-.cnt{
-  font-family:var(--f-head); font-weight:800; font-size:11.5px; color:var(--brand-700);
-  background:var(--blue-50); padding:2px 9px; border-radius:var(--pill);
-}
-.sdesc{margin-top:-4px}
-.sdesc{font-size:13px; color:var(--ink-500); margin-bottom:12px; max-width:62ch}
+      { grupo: "Malacate", id: "bajadas", label: "Bajadas de embarcaciones", unidad: "cantidad" },
+      { grupo: "Malacate", id: "subidas", label: "Subidas de embarcaciones", unidad: "cantidad" },
+      { grupo: "Malacate", id: "bonificados", label: "Servicios gratuitos o bonificados", unidad: "cantidad" },
 
-/* ------------------------------- cifras --------------------------------- */
-.cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:12px; margin-bottom:26px}
-.cifra{
-  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
-  padding:17px 18px 15px; text-align:left; position:relative; overflow:hidden;
-  box-shadow:var(--sh); transition:transform .2s var(--ease), box-shadow .2s var(--ease);
-  font-family:inherit; cursor:default; width:100%; display:block;
-}
-button.cifra{cursor:pointer}
-button.cifra:hover{transform:translateY(-3px); box-shadow:var(--sh-md)}
-button.cifra:active{transform:scale(.98)}
-.cifra::before{content:""; position:absolute; inset:0 0 auto 0; height:4px; background:var(--brand)}
-.cifra.verde::before{background:var(--verde)} .cifra.rojo::before{background:var(--rojo)}
-.cifra.ambar::before,.cifra.ocre::before{background:var(--sun)}
-.cifra.gris::before{background:var(--ink-300)}
-.cifra.on{box-shadow:0 0 0 2px var(--brand) inset, var(--sh-md)}
-.cifra .n{
-  font-family:var(--f-disp); font-size:40px; line-height:.95; color:var(--ink);
-  letter-spacing:.005em; display:block;
-}
-.cifra .n small{font-family:var(--f-head); font-size:16px; font-weight:700; color:var(--ink-400)}
-.cifra.rojo .n{color:var(--rojo)} .cifra.verde .n{color:var(--verde)}
-.cifra.ambar .n,.cifra.ocre .n{color:#b07c00}
-.cifra.gris .n{color:var(--ink-400)}
-.cifra .l{
-  font-size:12px; color:var(--ink-500); margin-top:5px; line-height:1.35;
-  font-weight:600;
-}
+      { grupo: "Terminal de Ómnibus", id: "llegadas", label: "Llegadas de ómnibus", unidad: "cantidad" },
+      { grupo: "Terminal de Ómnibus", id: "salidas", label: "Salidas de ómnibus", unidad: "cantidad" },
+      { grupo: "Terminal de Ómnibus", id: "reclamos", label: "Reclamos recibidos", unidad: "cantidad" }
+    ]
+  },
 
-/* =========================== VISTA GABINETE ============================== */
-.g-ctx{
-  display:flex; align-items:flex-start; gap:12px; margin:0 0 18px;
-  padding:16px 18px; background:#fff; border:1px solid var(--ink-200);
-  border-radius:var(--r); box-shadow:var(--sh); border-top:4px solid var(--brand);
-}
-.g-disc{
-  flex:0 0 42px; width:42px; height:42px; border-radius:50%; background:var(--brand);
-  display:flex; align-items:center; justify-content:center; box-shadow:var(--sh-brand);
-}
-.g-disc svg{width:22px; height:22px; stroke:#fff; fill:none; stroke-width:2;
-  stroke-linecap:round; stroke-linejoin:round}
-.g-ambito{
-  font-family:var(--f-head); font-weight:900; font-size:20px; line-height:1.15;
-  color:var(--ink); letter-spacing:-.015em;
-}
-.g-per{font-size:12.5px; color:var(--ink-500); margin-top:2px; font-weight:600}
-.g-per .vivo{
-  display:inline-block; background:var(--verde-50); color:var(--verde);
-  padding:1px 9px; border-radius:var(--pill); font-weight:800; font-size:11px;
-  margin-left:2px;
-}
-.g-per .cerr{background:var(--ink-100); color:var(--ink-500)}
+  /* ---------- 5 · HACIENDA Y FINANZAS ---------- */
+  "hac-tesoreria": {
+    sec: "Hacienda y Finanzas", dir: "Tesorería Municipal",
+    indicadores: [
+      { id: "ing_caja_propia", label: "Total de ingresos en caja propia", unidad: "pesos" },
+      { id: "ing_cajas_externas", label: "Total de ingresos en cajas externas", unidad: "pesos" }
+    ]
+  },
+  "hac-contabilidad": {
+    sec: "Hacienda y Finanzas", dir: "Dirección de Contabilidad y Administración",
+    indicadores: [
+      { id: "ejecucion", label: "Ejecución presupuestaria acumulada", unidad: "porcentaje" }
+    ]
+  },
+  "hac-ingresos": {
+    sec: "Hacienda y Finanzas", dir: "Dirección de Ingresos Públicos",
+    indicadores: [
+      { grupo: "Automotor", id: "lda_automotor", label: "Libres de deuda emitidos", unidad: "cantidad" },
+      { grupo: "Automotor", id: "bajas_automotor", label: "Bajas registradas", unidad: "cantidad" },
 
-.panel{
-  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
-  padding:6px 18px; box-shadow:var(--sh);
-}
+      { grupo: "Inmobiliario", id: "lda_inmobiliario", label: "Libres de deuda emitidos", unidad: "cantidad" },
+      { grupo: "Inmobiliario", id: "valuacion_fiscal", label: "Certificados de valuación fiscal emitidos", unidad: "cantidad" },
 
-/* quién destraba */
-.qfila{
-  display:grid; grid-template-columns:minmax(130px,1.3fr) minmax(70px,1fr) auto;
-  gap:12px; align-items:center; padding:9px 0; border-bottom:1px solid var(--ink-100);
-}
-.qfila:last-child{border-bottom:none}
-.qnom{font-size:13.5px; font-weight:600; color:var(--ink-700)}
-.qbar{height:10px; background:var(--ink-100); border-radius:var(--pill); overflow:hidden}
-.qbar span{
-  display:block; height:100%; background:linear-gradient(90deg,var(--brand-400),var(--brand));
-  border-radius:var(--pill); animation:crece .5s var(--ease) both;
-}
-@keyframes crece{from{width:0 !important}}
-.qn{
-  font-family:var(--f-head); font-size:12.5px; font-weight:700; color:var(--ink-500);
-  white-space:nowrap; text-align:right; min-width:66px;
-}
-.qn b{color:var(--rojo); font-weight:800}
+      { grupo: "Habilitación comercial", id: "habilitaciones", label: "Habilitaciones otorgadas", unidad: "cantidad" },
+      { grupo: "Habilitación comercial", id: "hab_declarativa", label: "Habilitaciones declarativas (60 días)", unidad: "cantidad" },
+      { grupo: "Habilitación comercial", id: "bajas_comercial", label: "Bajas comerciales registradas", unidad: "cantidad" },
 
-/* frenos */
-.g-pri{
-  display:flex; align-items:center; gap:10px;
-  font-family:var(--f-head); font-weight:800; font-size:10.5px; letter-spacing:.14em;
-  text-transform:uppercase; margin:22px 0 11px; color:var(--ink-400);
-}
-.g-pri span{
-  background:var(--ink-100); color:var(--ink-500); padding:3px 11px;
-  border-radius:var(--pill);
-}
-.g-pri::after{content:""; flex:1; height:1px; background:var(--ink-200)}
-.g-pri:first-child{margin-top:4px}
-.g-pri.alta span{background:var(--rojo-50); color:var(--rojo)}
-.g-pri.alta::after{background:#f6c9c7}
-.g-pri.media span{background:var(--sun-50); color:#a8740a}
-.g-pri.media::after{background:#f3dfae}
+      { grupo: "Notificación de deudas", id: "notif_impresas", label: "Notificaciones impresas entregadas", unidad: "cantidad" },
+      { grupo: "Notificación de deudas", id: "notif_whatsapp", label: "Notificaciones enviadas por WhatsApp", unidad: "cantidad" },
+      { grupo: "Notificación de deudas", id: "calles_recorridas", label: "Calles o barrios recorridos", unidad: "cantidad" },
 
-.freno{
-  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
-  border-top:4px solid var(--ink-300); padding:15px 17px 14px; margin-bottom:11px;
-  box-shadow:var(--sh); transition:transform .2s var(--ease), box-shadow .2s var(--ease);
-}
-.freno:hover{transform:translateY(-3px); box-shadow:var(--sh-md)}
-.freno.alta{border-top-color:var(--rojo)}
-.freno.media{border-top-color:var(--sun)}
-.freno h3{
-  font-family:var(--f-head); font-weight:800; font-size:16.5px; line-height:1.28;
-  margin:8px 0 6px; color:var(--ink); letter-spacing:-.012em;
-}
-.f-top{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
-.f-cat{
-  font-family:var(--f-head); font-weight:800; font-size:10px; letter-spacing:.13em;
-  text-transform:uppercase; color:#fff; background:var(--brand);
-  padding:3px 10px; border-radius:var(--pill);
-}
-.g-tag{
-  font-size:11px; font-weight:700; color:var(--ink-500); background:var(--ink-50);
-  border:1px solid var(--ink-200); border-radius:var(--pill); padding:2px 9px;
-}
-.g-tag.persiste{color:#fff; background:var(--rojo); border-color:var(--rojo)}
-.f-area{font-size:12.5px; color:var(--ink-500); font-weight:600; margin-bottom:10px}
-.f-pide,.f-quien{
-  font-size:13px; line-height:1.45; color:var(--ink-700);
-  display:flex; gap:9px; margin-top:6px;
-}
-.f-pide b,.f-quien b{
-  flex:0 0 58px; font-family:var(--f-head); font-size:9.5px; font-weight:800;
-  letter-spacing:.13em; text-transform:uppercase; color:var(--ink-400);
-  padding-top:3px;
-}
-.f-quien .sin{font-size:12.5px; color:var(--rojo); font-weight:700; font-style:italic}
+      { grupo: "Eventos", id: "eventos", label: "Eventos realizados", unidad: "cantidad" },
+      { grupo: "Eventos", id: "deuda_eventos", label: "Deuda por eventos pendiente de cobro", unidad: "pesos" },
 
-/* estado de las áreas */
-.gab-grupo{
-  display:inline-block; font-family:var(--f-head); font-weight:800; font-size:10.5px;
-  letter-spacing:.13em; text-transform:uppercase; margin:18px 0 9px;
-  color:var(--ink-500); background:var(--ink-100); padding:3px 11px;
-  border-radius:var(--pill);
-}
-.gab-grupo:first-child{margin-top:4px}
-.gab-grupo.verde{color:#1e7a40; background:var(--verde-50)}
-.gab-grupo.ocre{color:#a8740a; background:var(--sun-50)}
-.gab-grupo.gris{color:var(--ink-400); background:transparent;
-  border:1px dashed var(--ink-200)}
-.g-lista{display:flex; flex-wrap:wrap; gap:6px; padding-bottom:4px}
-.pill{
-  font-size:12px; font-weight:600; padding:5px 12px; border-radius:var(--pill);
-  border:1.5px solid var(--ink-200); background:#fff; color:var(--ink-700);
-}
-.pill.v{border-color:#b5e3c6; background:var(--verde-50); color:#1e7a40}
-.pill.a{border-color:#f3dfae; background:var(--sun-50); color:#8a6410}
-.pill.g{color:var(--ink-400); background:transparent; border-style:dashed}
-.ver-resto{
-  display:block; width:100%; margin:16px 0 4px; padding:11px 18px;
-  font-family:var(--f-head); font-weight:800; font-size:13.5px;
-  color:var(--brand-700); background:#fff; border:1.5px dashed var(--blue-200);
-  border-radius:var(--pill); cursor:pointer; transition:all .18s var(--ease);
-}
-.ver-resto:hover{background:var(--blue-50); border-style:solid; border-color:var(--brand)}
-.ver-resto:active{transform:scale(.98)}
-.vacio{
-  font-size:13.5px; color:var(--ink-500); padding:26px 0; text-align:center;
-  background:#fff; border:1px dashed var(--ink-200); border-radius:var(--r);
-}
+      { grupo: "Trámites administrativos", id: "consultas_whatsapp", label: "Mensajes respondidos por WhatsApp", unidad: "cantidad" },
 
-/* ====================== atención (vista Resumen) =========================
-   Estructura real: .atencion > .grupo > button.g-cab + .g-cuerpo(.oculto)
-   El botón abre y cierra; la clase .abierto vive en el botón.            */
-.atencion{
-  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
-  overflow:hidden; box-shadow:var(--sh);
-}
-.grupo + .grupo{border-top:1px solid var(--ink-100)}
+      { grupo: "Catastro", id: "inscripciones", label: "Inscripciones de títulos y planos de mensura", unidad: "cantidad" }
+    ]
+  },
 
-.g-cab{
-  display:flex; width:100%; align-items:center; gap:13px; padding:15px 18px;
-  background:#fff; border:0; text-align:left; cursor:pointer;
-  font-family:inherit; color:inherit; transition:background .15s;
-}
-.g-cab:hover{background:var(--blue-50)}
-.g-cab:active{background:var(--blue-100)}
-.g-marca{
-  flex:0 0 4px; align-self:stretch; min-height:32px; border-radius:var(--pill);
-  background:var(--ink-300);
-}
-.g-marca.r{background:var(--rojo)} .g-marca.a{background:var(--sun)}
-.g-txt{flex:1; min-width:0}
-.g-tit{
-  font-family:var(--f-head); font-weight:800; font-size:15px; display:block;
-  color:var(--ink); letter-spacing:-.01em;
-}
-.g-sub{display:block; font-size:12.5px; color:var(--ink-500); margin-top:2px; line-height:1.4}
-.g-n{
-  font-family:var(--f-head); font-weight:800; font-size:12px; color:var(--brand-700);
-  background:var(--blue-50); padding:3px 11px; border-radius:var(--pill); flex:0 0 auto;
-}
-.g-fl{
-  color:var(--ink-300); font-size:11px; flex:0 0 auto;
-  transition:transform .2s var(--ease); transform:rotate(90deg);
-}
-.g-cab.abierto .g-fl{transform:rotate(-90deg); color:var(--brand)}
-.g-cuerpo{background:var(--ink-50); border-top:1px solid var(--ink-100)}
+  /* ---------- 6 · OBRAS Y SERVICIOS PÚBLICOS ---------- */
+  "obr-subsecretaria": {
+    sec: "Obras y Servicios Públicos", dir: "Subsecretaría de Obras Públicas",
+    indicadores: [
+      { id: "obras_curso", label: "Obras en ejecución", unidad: "cantidad" },
+      { id: "obras_fin", label: "Obras finalizadas en el período", unidad: "cantidad" },
+      { id: "reclamos_sanit", label: "Reclamos de agua y cloacas atendidos", unidad: "cantidad" }
+    ]
+  },
+  "obr-vivienda": {
+    sec: "Obras y Servicios Públicos", dir: "Dirección de Vivienda Municipal",
+    indicadores: [
+      { id: "postulantes", label: "Postulantes en registro", unidad: "cantidad" },
+      { id: "unidades", label: "Unidades entregadas o en gestión", unidad: "cantidad" },
+      { id: "mejoramientos", label: "Operatorias de mejoramiento activas", unidad: "cantidad" }
+    ]
+  },
+  "obr-higieneseguridad": {
+    sec: "Obras y Servicios Públicos", dir: "Dirección de Higiene y Seguridad",
+    indicadores: [
+      { id: "auditorias", label: "Auditorías de obra realizadas", unidad: "cantidad" },
+      { id: "actas", label: "Actas de infracción y emplazamientos", unidad: "cantidad" }
+    ]
+  },
+  "obr-servicios": {
+    sec: "Obras y Servicios Públicos", dir: "Dirección de Servicios Públicos",
+    indicadores: [
+      { id: "reclamos_ing", label: "Reclamos ingresados", unidad: "cantidad" },
+      { id: "reclamos_res", label: "Reclamos resueltos", unidad: "cantidad" },
+      { id: "luminarias", label: "Luminarias repuestas o reparadas", unidad: "cantidad" }
+    ]
+  },
+  "obr-catastro": {
+    sec: "Obras y Servicios Públicos", dir: "Catastro y Urbanismo",
+    indicadores: [
+      { id: "permisos", label: "Permisos de obra otorgados", unidad: "cantidad" },
+      { id: "planos", label: "Planos de mensura visados", unidad: "cantidad" },
+      { id: "finales", label: "Finales de obra emitidos", unidad: "cantidad" }
+    ]
+  },
 
-.at-row{
-  display:flex; gap:13px; padding:14px 18px; align-items:stretch;
-  border-bottom:1px solid var(--ink-200);
-}
-.at-row:last-child{border-bottom:none}
-.at-marca{flex:0 0 3px; border-radius:var(--pill); background:var(--ink-300)}
-.at-marca.r{background:var(--rojo)} .at-marca.a{background:var(--sun)}
-.at-cuerpo{flex:1; min-width:0}
-.at-sec{
-  font-family:var(--f-head); font-weight:800; font-size:9.5px; letter-spacing:.13em;
-  text-transform:uppercase; color:var(--ink-400);
-}
-.at-tit{
-  font-family:var(--f-head); font-weight:800; font-size:14.5px; display:block;
-  color:var(--ink); margin:1px 0 3px;
-}
-.at-txt{font-size:13px; line-height:1.45; color:var(--ink-700)}
-.at-meta{font-size:12px; color:var(--ink-500); margin-top:5px}
+  /* ---------- 7 · DESARROLLO HUMANO ---------- */
+  "dh-accionsocial": {
+    sec: "Desarrollo Humano", dir: "Dirección de Acción Social",
+    indicadores: [
+      { id: "familias", label: "Familias asistidas", unidad: "cantidad" },
+      { id: "relevamientos", label: "Relevamientos socioeconómicos realizados", unidad: "cantidad" },
+      { id: "comedores", label: "Raciones entregadas en comedores", unidad: "cantidad" }
+    ]
+  },
+  "dh-familia": {
+    sec: "Desarrollo Humano", dir: "Dirección de Familia, Niñez y Adolescencia",
+    indicadores: [
+      { id: "casos_nuevos", label: "Situaciones nuevas atendidas", unidad: "cantidad" },
+      { id: "casos_seguim", label: "Situaciones en seguimiento activo", unidad: "cantidad" },
+      { id: "prevencion", label: "Actividades de prevención realizadas", unidad: "cantidad" }
+    ]
+  },
+  "dh-genero": {
+    sec: "Desarrollo Humano", dir: "Dirección de Género y Diversidades",
+    indicadores: [
+      { id: "acompanamientos", label: "Personas acompañadas", unidad: "personas" },
+      { id: "talleres", label: "Talleres de sensibilización dictados", unidad: "cantidad" }
+    ]
+  },
+  "dh-adultosmayores": {
+    sec: "Desarrollo Humano", dir: "Dirección de Políticas para Adultos Mayores",
+    indicadores: [
+      { id: "clubes", label: "Clubes de adultos mayores activos", unidad: "cantidad" },
+      { id: "participantes", label: "Participantes en programas", unidad: "personas" }
+    ]
+  },
+  "dh-discapacidad": {
+    sec: "Desarrollo Humano", dir: "Dirección de Discapacidad",
+    indicadores: [
+      { id: "censo", label: "Personas en el censo municipal de discapacidad", unidad: "personas" },
+      { id: "inclusion", label: "Personas en programas de inclusión", unidad: "personas" },
+      { id: "accesibilidad", label: "Intervenciones de accesibilidad gestionadas", unidad: "cantidad" }
+    ]
+  },
+  "dh-juventud": {
+    sec: "Desarrollo Humano", dir: "Dirección de Juventud",
+    indicadores: [
+      { id: "participantes", label: "Jóvenes participantes en programas", unidad: "personas" },
+      { id: "actividades", label: "Actividades realizadas", unidad: "cantidad" },
+      { id: "orientacion", label: "Orientaciones vocacionales o laborales", unidad: "cantidad" }
+    ]
+  },
+  "dh-deportes": {
+    sec: "Desarrollo Humano", dir: "Dirección de Deportes y Recreación",
+    indicadores: [
+      { id: "escuelas", label: "Inscriptos en Escuelas Deportivas Municipales", unidad: "personas" },
+      { id: "torneos", label: "Torneos y eventos organizados", unidad: "cantidad" },
+      { id: "clubes", label: "Clubes y asociaciones asistidas", unidad: "cantidad" }
+    ]
+  },
 
-/* ============================ matriz ==================================== */
-.matriz-cont{
-  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
-  overflow:auto; box-shadow:var(--sh);
-}
-table{border-collapse:collapse; width:100%; font-size:13px}
-thead th{
-  position:sticky; top:0; background:#fff; z-index:2; font-family:var(--f-head);
-  font-weight:800; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
-  color:var(--ink-500); padding:11px 9px; text-align:center; white-space:nowrap;
-  border-bottom:2px solid var(--ink-200);
-}
-th,td{padding:9px; border-bottom:1px solid var(--ink-100)}
-thead th span{display:block; font-size:9px; font-weight:700; letter-spacing:.09em;
-  color:var(--ink-300); margin-top:2px}
-thead th.per{min-width:78px}
-td.dir{
-  text-align:left; font-size:13.5px; font-weight:600; min-width:200px;
-  position:sticky; left:0; background:#fff; z-index:1;
-}
-td.dir .ref{display:block; font-size:11.5px; color:var(--ink-400); font-weight:400; margin-top:1px}
-tr.sec-fila td{
-  background:var(--blue-50); font-family:var(--f-head); font-weight:900; font-size:11px;
-  letter-spacing:.13em; text-transform:uppercase; color:var(--brand-700); padding:8px 9px;
-}
-tr.fila-nop td.dir{color:var(--ink-400)}
-tr.fila-nop td.dir .ref{color:var(--ink-300); font-style:italic}
-td.cel{text-align:center}
-.celda{
-  display:inline-flex; flex-direction:column; align-items:center; justify-content:center;
-  min-width:44px; padding:5px 7px; border-radius:var(--r-sm);
-  font-family:var(--f-head); font-weight:800; font-size:14px; line-height:1.1;
-}
-.celda small{font-size:9px; font-weight:600; opacity:.75; margin-top:1px}
-.c-ok{background:var(--verde-50); color:#1e7a40}
-.c-tarde{background:var(--sun-50); color:#8a6410}
-.c-nada{background:var(--rojo-50); color:var(--rojo)}
-.c-pend{background:var(--ink-50); color:var(--ink-400)}
-.c-previo{background:transparent; color:var(--ink-300); border:1px dashed var(--ink-200)}
-.c-sinnov{background:#fff; color:var(--ink-500); border:1.5px dashed var(--ink-300)}
-.c-nop{background:transparent; color:var(--ink-300); border:1px solid var(--ink-100)}
-.tag{
-  display:inline-block; font-family:var(--f-head); font-size:10.5px; font-weight:800;
-  padding:2px 9px; border-radius:var(--pill); background:var(--ink-100); color:var(--ink-500);
-}
-.tag.r{background:var(--rojo-50); color:var(--rojo)}
-.tag.a{background:var(--sun-50); color:#8a6410}
-.tag.g{background:transparent; color:var(--ink-300)}
-.punto{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--rojo); margin-left:4px}
-.aviso-scroll{display:none; font-size:12px; color:var(--ink-400); margin-top:7px; text-align:center}
-.sw{display:inline-block; width:13px; height:13px; border-radius:4px; margin-right:5px; vertical-align:-2px}
-.refs{display:flex; flex-wrap:wrap; gap:14px; font-size:12px; color:var(--ink-500); margin-top:12px}
+  /* ---------- 8 · SALUD PÚBLICA ---------- */
+  "sal-saludpublica": {
+    sec: "Salud Pública", dir: "Dirección de Salud Pública",
+    indicadores: [
+      { id: "consultas", label: "Consultas atendidas en consultorios", unidad: "cantidad" },
+      { id: "vacunas", label: "Dosis aplicadas", unidad: "cantidad" },
+      { id: "operativos", label: "Operativos itinerantes en parajes", unidad: "cantidad" }
+    ]
+  },
+  "sal-bromatologia": {
+    sec: "Salud Pública", dir: "Dirección de Bromatología y Zoonosis",
+    indicadores: [
+      { id: "inspecciones", label: "Inspecciones bromatológicas", unidad: "cantidad" },
+      { id: "castraciones", label: "Castraciones realizadas", unidad: "cantidad" },
+      { id: "antirrabica", label: "Dosis antirrábicas aplicadas", unidad: "cantidad" }
+    ]
+  },
+  "sal-interdisciplinario": {
+    sec: "Salud Pública", dir: "Equipo Interdisciplinario",
+    indicadores: [
+      { id: "intervenciones", label: "Intervenciones realizadas", unidad: "cantidad" },
+      { id: "informes", label: "Informes técnicos emitidos", unidad: "cantidad" }
+    ]
+  },
 
-/* ========================== indicadores ================================= */
-.ind-scroll{
-  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
-  overflow:auto; box-shadow:var(--sh); margin-bottom:14px;
-}
-.ind-sec{
-  font-family:var(--f-head); font-weight:900; font-size:11px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--brand-700); margin:20px 0 8px;
-}
-.ind-area{
-  font-family:var(--f-head); font-weight:800; font-size:14.5px; margin:14px 0 6px;
-  color:var(--ink);
-}
-.ind-tabla{width:100%; border-collapse:collapse; font-size:13px}
-.ind-cab th{font-size:10.5px}
-.ind-nom{text-align:left; font-weight:600; min-width:180px}
-.ind-uni{font-size:11.5px; color:var(--ink-400); font-weight:400; display:block}
-.ind-val{text-align:center; font-family:var(--f-head); font-weight:700}
-.ind-dir{font-weight:700}
-.spark{display:inline-block; vertical-align:middle}
-.delta{font-family:var(--f-head); font-size:11.5px; font-weight:800; white-space:nowrap}
-.delta.sube{color:var(--verde)} .delta.baja{color:var(--rojo)}
-.delta.igual{color:var(--ink-400)}
+  /* ---------- 9 · TURISMO Y CULTURA ---------- */
+  "tc-turismo": {
+    sec: "Turismo y Cultura", dir: "Dirección de Promoción Turística",
+    indicadores: [
+      { id: "consultas", label: "Consultas en oficinas de informes", unidad: "cantidad" },
+      { id: "ocupacion", label: "Ocupación hotelera promedio", unidad: "porcentaje" },
+      { id: "prestadores", label: "Prestadores capacitados", unidad: "cantidad" }
+    ]
+  },
+  "tc-cultura": {
+    sec: "Turismo y Cultura", dir: "Dirección de Cultura",
+    indicadores: [
+      { id: "eventos", label: "Eventos culturales realizados", unidad: "cantidad" },
+      { id: "talleristas", label: "Inscriptos en talleres y escuelas", unidad: "personas" },
+      { id: "asistentes", label: "Asistentes estimados", unidad: "personas" }
+    ]
+  },
+  "tc-festividades": {
+    sec: "Turismo y Cultura", dir: "Dirección de Festividades",
+    indicadores: [
+      { id: "eventos", label: "Eventos del calendario ejecutados", unidad: "cantidad" },
+      { id: "mesas", label: "Mesas operativas con comisiones", unidad: "cantidad" },
+      { id: "contratos", label: "Contratos artísticos y técnicos gestionados", unidad: "cantidad" }
+    ]
+  },
+  "tc-patrimonio": {
+    sec: "Turismo y Cultura", dir: "Dirección de Patrimonio",
+    indicadores: [
+      { id: "catalogo", label: "Bienes en el Catálogo de Bienes Patrimoniales", unidad: "cantidad" },
+      { id: "visitantes", label: "Visitantes al Museo Municipal", unidad: "personas" },
+      { id: "intervenciones", label: "Intervenciones de preservación supervisadas", unidad: "cantidad" }
+    ]
+  },
 
-/* ============================= trabas =================================== */
-.traba{
-  background:#fff; border:1px solid var(--ink-200); border-top:4px solid var(--ink-300);
-  border-radius:var(--r); padding:15px 17px; margin-bottom:11px; box-shadow:var(--sh);
-  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
-}
-.traba:hover{transform:translateY(-2px); box-shadow:var(--sh-md)}
-.traba.alta{border-top-color:var(--rojo)}
-.traba.media{border-top-color:var(--sun)}
-.tr-cab{display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-bottom:7px}
-.tr-dir{font-family:var(--f-head); font-weight:800; font-size:14.5px}
-.tr-dir small{display:block; font-family:var(--f-body); font-weight:600; font-size:11.5px;
-  color:var(--ink-400); margin-top:1px}
-.tr-pide b{display:block; font-family:var(--f-head); font-size:9.5px; font-weight:800;
-  letter-spacing:.13em; text-transform:uppercase; color:var(--ink-400); margin-bottom:1px}
-.tr-desc{font-size:13.5px; line-height:1.5; color:var(--ink-700)}
-.tr-pide{font-size:13px; color:var(--ink-600); margin-top:7px}
-.tr-meta{display:flex; flex-wrap:wrap; gap:9px; font-size:11.5px; color:var(--ink-400); margin-top:8px}
+  /* ---------- 10 · DESARROLLO PRODUCTIVO ---------- */
+  "dp-produccion": {
+    sec: "Desarrollo Productivo", dir: "Dirección de Producción",
+    indicadores: [
+      { id: "productores", label: "Productores asistidos", unidad: "cantidad" },
+      { id: "financiamiento", label: "Microcréditos e incentivos otorgados", unidad: "cantidad" },
+      { id: "plantines", label: "Plantines producidos en el vivero", unidad: "cantidad" }
+    ]
+  },
+  "dp-emprendedores": {
+    sec: "Desarrollo Productivo", dir: "Dirección de Emprendedores",
+    indicadores: [
+      { id: "emprendedores", label: "Emprendedores acompañados", unidad: "personas" },
+      { id: "capacitados", label: "Emprendimientos capacitados", unidad: "cantidad" },
+      { id: "ferias", label: "Ferias y paseos organizados", unidad: "cantidad" }
+    ]
+  },
+  "dp-educacion": {
+    sec: "Desarrollo Productivo", dir: "Dirección de Educación",
+    indicadores: [
+      { id: "cursantes", label: "Estudiantes en trayectos formativos", unidad: "personas" },
+      { id: "convenios", label: "Convenios formativos vigentes", unidad: "cantidad" },
+      { id: "becas", label: "Becas y apoyos gestionados", unidad: "cantidad" }
+    ]
+  },
+  "dp-empleo": {
+    sec: "Desarrollo Productivo", dir: "Dirección de Empleo",
+    indicadores: [
+      { id: "inscriptos", label: "Inscriptos en la Oficina de Empleo", unidad: "personas" },
+      { id: "intermediaciones", label: "Intermediaciones laborales concretadas", unidad: "cantidad" },
+      { id: "talleres", label: "Talleres de orientación dictados", unidad: "cantidad" }
+    ]
+  },
+  "dp-medioambiente": {
+    sec: "Desarrollo Productivo", dir: "Dirección de Medio Ambiente",
+    indicadores: [
+      { id: "fiscalizaciones", label: "Fiscalizaciones de impacto ambiental", unidad: "cantidad" },
+      { id: "reciclado", label: "Toneladas ingresadas a reciclaje", unidad: "toneladas" },
+      { id: "concientizacion", label: "Acciones de concientización", unidad: "cantidad" }
+    ]
+  }
+};
 
-/* ============================== pie ===================================== */
-footer{
-  border-top:1px solid var(--ink-200); margin-top:44px; padding:24px 0 34px;
-  font-size:12px; color:var(--ink-400); line-height:1.6; background:#fff;
-}
-
-/* ============================= mobile =================================== */
-@media(max-width:760px){
-  .panel{padding:4px 14px}
-  body{font-size:14.5px}
-  .wrap{padding:0 15px}
-  header{padding:18px 0 20px}
-  .h-marca{margin-bottom:12px}
-  .hsub{font-size:12.5px}
-  .btn-filtros{display:block}
-  .filtros{display:none}
-  .filtros.abierta{display:block}
-  .tabs{margin:14px -15px 12px; padding:0 15px 3px}
-  .tab{font-size:13px; padding:8px 15px}
-  .cifras{grid-template-columns:1fr 1fr; gap:10px}
-  .cifra{padding:14px 14px 12px}
-  .cifra .n{font-size:32px}
-  .cifra .l{font-size:11px}
-  .g-ctx{padding:14px; gap:10px}
-  .g-ambito{font-size:17px}
-  .g-disc{flex:0 0 36px; width:36px; height:36px}
-  .g-disc svg{width:19px; height:19px}
-  .qfila{grid-template-columns:1fr auto; gap:5px; padding:10px 0}
-  .qbar{grid-column:1/-1; order:3; height:8px}
-  .freno{padding:13px 14px}
-  .freno h3{font-size:15.5px}
-  .f-pide,.f-quien{flex-direction:column; gap:1px}
-  .f-pide b,.f-quien b{flex:none; padding-top:0}
-  .stit h2{font-size:17px}
-  .sdesc{font-size:12.5px}
-  .at-row,.g-cab{padding:13px 14px; gap:10px}
-  .g-tit{font-size:14px} .g-sub{font-size:12px}
-  .traba{padding:13px 14px}
-  .tr-meta{gap:5px; flex-direction:column}
-  .aviso-scroll{display:block}
-  td.dir{min-width:160px; font-size:12.5px}
-  section{margin-bottom:24px}
-}
-@media(max-width:339px){
-  .cifras{grid-template-columns:1fr}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important}
-  .freno:hover,button.cifra:hover,.tab:hover{transform:none}
-}
-
-</style>
-</head>
-<body>
-
-<header>
-  <div class="wrap">
-    <div class="h-marca">
-      <img class="h-emb" alt="" src="data:image/png;base64,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">
-      <div class="h-wm"><b>ESQUINA</b><span>GOBIERNO</span></div>
-    </div>
-    <h1>Tablero de <em>gestión</em></h1>
-    <div class="hsub"><b id="h-periodo">—</b> · <span id="h-gen">—</span></div>
-  </div>
-</header>
-
-<div class="wrap">
-  <div id="nota-demo" class="nota ocre" style="display:none">
-    <b>Datos de demostración</b>
-    No se pudo leer la planilla, así que lo que se ve son datos simulados. Suele pasar si
-    la implementación no está publicada con acceso "Cualquier usuario", o si el código se
-    modificó sin crear una versión nueva.
-  </div>
-  <div id="nota-inicio" class="nota azul" style="display:none"></div>
-
-  <div class="tabs">
-    <button class="tab on" data-v="gabinete">Gabinete</button>
-    <button class="tab" data-v="resumen">Resumen</button>
-    <button class="tab" data-v="matriz">Matriz de cumplimiento</button>
-    <button class="tab" data-v="indicadores">Indicadores</button>
-    <button class="tab" data-v="trabas">Trabas abiertas <span class="n" id="tab-tr">0</span></button>
-  </div>
-
-  <button class="btn-filtros" id="btn-filtros">Filtros y foco <span id="btn-fl">▾</span></button>
-  <div class="filtros" id="caja-filtros">
-    <div class="f-fila">
-      <span class="f-lbl">Filtrar</span>
-      <select id="f-sec"><option value="">Todas las secretarías</option></select>
-      <select id="f-est">
-        <option value="">Cualquier estado</option>
-        <option value="reporto">Reportó el período en curso</option>
-        <option value="falta">No reportó el período en curso</option>
-        <option value="tarde">Reportó fuera de término</option>
-        <option value="sinnov">Reportó sin novedades</option>
-      </select>
-      <input type="text" id="f-txt" placeholder="Buscar dirección o referente…">
-      <button class="limpiar" id="f-clr">Limpiar filtros</button>
-    </div>
-    <div class="f-fila">
-      <span class="f-lbl">Foco</span>
-      <button class="chip on" data-foco="">Todo</button>
-      <button class="chip r" data-foco="mudas">Silencio sostenido</button>
-      <button class="chip a" data-foco="frias">Sin novedades sostenido</button>
-      <button class="chip r" data-foco="criticas">Con traba crítica</button>
-      <button class="chip a" data-foco="falta">Falta el período en curso</button>
-    </div>
-  </div>
-
-  <div id="v-gabinete">
-    <div id="g-contexto" class="g-ctx"></div>
-    <div class="cifras" id="g-cifras"></div>
-
-    <section id="g-sec-quien">
-      <div class="stit"><h2>Quién tiene que destrabar</h2></div>
-      <div class="panel"><div id="g-quien"></div></div>
-    </section>
-
-    <section>
-      <div class="stit"><h2>Lo que está frenado</h2><span class="cnt" id="g-cnt">0</span></div>
-      <div id="g-frenos"></div>
-    </section>
-
-    <section>
-      <div class="stit"><h2>Quiénes informaron</h2></div>
-      <div class="panel"><div id="g-areas"></div></div>
-    </section>
-
-    <div id="g-pie" class="nota" style="display:none"></div>
-  </div>
-
-  <div id="v-resumen" class="oculto">
-    <div class="cifras" id="cifras"></div>
-    <section>
-      <div class="stit"><h2>Requiere atención del liderazgo</h2><span class="cnt" id="c-at">0</span></div>
-      <div class="sdesc">Agrupado por tipo de señal y ordenado por urgencia. Tocá cada grupo
-        para desplegarlo o cerrarlo.</div>
-      <div id="atencion"></div>
-    </section>
-  </div>
-
-  <div id="v-matriz" class="oculto">
-    <section>
-      <div class="stit"><h2>Matriz de cumplimiento</h2><span class="cnt" id="c-mx">0</span></div>
-      <div class="sdesc">El número grande es la cantidad de acciones informadas en el período.
-        El color indica únicamente si el reporte llegó y cuándo — no evalúa el contenido.
-        El punto rojo señala trabas de criticidad alta.</div>
-      <div class="aviso-scroll">← Deslizá la tabla para ver todos los períodos</div>
-      <div class="matriz-cont">
-        <table id="matriz"><thead id="m-head"></thead><tbody id="m-body"></tbody></table>
-        <div class="refs">
-          <div><span class="sw" style="background:var(--verde-100);border:1px solid var(--verde)"></span> En término</div>
-          <div><span class="sw" style="background:var(--ambar-100);border:1px solid var(--ambar)"></span> Fuera de término</div>
-          <div><span class="sw" style="background:#fff;border:1.5px dashed var(--gris-200)"></span> Reportó sin novedades</div>
-          <div><span class="sw" style="background:var(--rojo-100);border:1px solid var(--rojo)"></span> Sin reporte</div>
-          <div><span class="sw" style="background:var(--gris-100);border:1px solid var(--gris-200)"></span> Ventana abierta</div>
-          <div><span class="sw" style="background:transparent;border:1px dashed #d8d2c6"></span> Previo al sistema</div>
-          <div><span class="sw" style="background:transparent;border:1px solid var(--gris-100)"></span> Área no operativa</div>
-          <div><span class="sw" style="background:var(--rojo);border-radius:50%;width:9px;height:9px"></span> Traba crítica</div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <div id="v-indicadores" class="oculto">
-    <section>
-      <div class="stit"><h2>Indicadores fijos por área</h2><span class="cnt" id="c-ind">0</span></div>
-      <div class="sdesc">Cada área informa entre dos y tres cifras que se repiten idénticas
-        todos los períodos. Son lo único del reporte que permite comparar una quincena con
-        otra. La variación se calcula contra el período anterior con dato cargado; un campo
-        vacío significa que el dato no estuvo disponible, no que valga cero.</div>
-      <div class="aviso-scroll">← Deslizá cada tabla para ver todos los períodos</div>
-      <div id="indicadores"></div>
-    </section>
-  </div>
-
-  <div id="v-trabas" class="oculto">
-    <section>
-      <div class="stit"><h2>Trabas abiertas</h2><span class="cnt" id="c-tr">0</span></div>
-      <div class="sdesc">Lo que las direcciones declaran que las está frenando. Cada ítem tiene
-        un pedido concreto y un responsable posible. Se cierran poniendo CERRADA en la hoja Trabas.</div>
-      <div id="trabas"></div>
-    </section>
-  </div>
-
-  <footer class="wrap" style="padding:20px 0 0">
-    Centro Estadístico Municipal · Secretaría de Coordinación General<br>
-    Seguimiento institucional, no evaluación de desempeño individual.
-    Art. 103 de la Carta Orgánica.
-  </footer>
-</div>
-
-<script src="direcciones.js"></script>
-<script>
-/* ==========================================================================
-   CONFIGURACIÓN — pegar la URL /exec del Apps Script implementado
-   ========================================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbyOM3bpN2yuS6dV2kp0FkC-qpoot6hdhUU1raoPjx7k8Hr3JlzOoliG0RxxcU7CIkahZw/exec";
-const N_PERIODOS = 6;
-
-/* Primer período en que el sistema estuvo vigente. Los anteriores no se cuentan
-   como incumplimiento: el área no tenía cómo reportar. Formato AAAA-MM-Qn.     */
-const PERIODO_INICIO = "2026-10-Q1";
-
-/* Áreas que todavía no están operativas: sin titular o sin equipo asignado.
-   No tienen actividad que reportar, así que se muestran en gris y quedan
-   fuera de todos los conteos de cumplimiento. Cuando un área se ponga en
-   marcha, basta con sacar su código de esta lista.
-   Fuente: columna "Reporte 1a quincena octubre" = "sin designacion"
-   de la planilla Seguimiento-notas-referentes.                           */
-const NO_OPERATIVAS = [
-  "int-escribania",        /* Escribanía Municipal */
-  "cg-comunicacion",       /* Comunicación Institucional */
-  "cg-psicosocial",        /* Gabinete Psicosocial */
-  "gob-inspeccion",        /* Inspección y Fiscalización */
-  "gob-defensacivil",      /* Defensa Civil */
-  "obr-higieneseguridad",  /* Higiene y Seguridad */
-  "obr-catastro",          /* Catastro y Urbanismo */
-  "sal-interdisciplinario" /* Equipo Interdisciplinario */
+const SECRETARIAS = [
+  "Intendencia",
+  "Coordinación General",
+  "Gobierno",
+  "Hacienda y Finanzas",
+  "Obras y Servicios Públicos",
+  "Desarrollo Humano",
+  "Salud Pública",
+  "Turismo y Cultura",
+  "Desarrollo Productivo"
 ];
 
-let DATOS = null, vista = "gabinete", foco = "";
-
-window.addEventListener("error", function(ev){
-  if (document.getElementById("fallo")) return;
-  const d = document.createElement("div");
-  d.id = "fallo"; d.className = "nota ocre";
-  d.innerHTML = "<b>No se pudo cargar el tablero</b>Ocurrió un error al dibujar la vista: " +
-    (ev.message || "desconocido") + ". Probá recargar la página.";
-  document.querySelector(".wrap").prepend(d);
-});
-
-(async function(){
-  let d = null;
-  if (API_URL) {
-    try { d = await (await fetch(API_URL + "?api=tablero&periodos=" + N_PERIODOS)).json(); }
-    catch(e){ console.warn("Backend no disponible:", e); }
-  }
-  if (!d || !d.ok) { d = generarDemo(); document.getElementById("nota-demo").style.display = "block"; }
-  DATOS = preparar(d);
-  montarControles();
-  render();
-})();
-
-/* Marca como "previo" lo anterior al inicio del sistema y recalcula rachas
-   ignorándolo, para no contar como falta lo que nunca se pidió. */
-function preparar(d){
-  d.periodos.forEach(p => p.previo = p.id < PERIODO_INICIO);
-  d.vigentes = d.periodos.filter(p => !p.previo).length;
-  d.filas.forEach(f => {
-    f.noOperativa = NO_OPERATIVAS.includes(f.codigo);
-    if (f.noOperativa){
-      f.celdas.forEach(c => { c.estado = "no_operativa"; c.sinNovedades = false; c.criticas = 0; });
-      f.rachaSinReporte = 0; f.rachaSinNovedad = 0;
-      return;
-    }
-    f.celdas.forEach((c, i) => { if (d.periodos[i].previo) c.estado = "previo"; });
-    let rSR = 0, rSN = 0, cA = false, cB = false;
-    f.celdas.forEach(c => {
-      if (c.estado === "pendiente" || c.estado === "previo") return;
-      if (!cA){ if (c.estado === "sin_reporte") rSR++; else cA = true; }
-      if (!cB){ if (c.estado === "sin_reporte" || c.sinNovedades) rSN++; else cB = true; }
-    });
-    f.rachaSinReporte = rSR; f.rachaSinNovedad = rSN;
-  });
-  return d;
-}
-
-function montarControles(){
-  const sel = document.getElementById("f-sec");
-  [...new Set(DATOS.filas.map(f => f.secretaria))].forEach(x => {
-    const o = document.createElement("option");
-    o.value = x; o.textContent = x === "Intendencia" ? "Intendencia" : "Secretaría de " + x;
-    sel.appendChild(o);
-  });
-  document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
-    vista = t.dataset.v;
-    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === t));
-    ["gabinete","resumen","matriz","indicadores","trabas"].forEach(v =>
-      document.getElementById("v-" + v).classList.toggle("oculto", v !== vista));
-    render();
-  });
-  document.querySelectorAll(".chip").forEach(c => c.onclick = () => {
-    foco = (foco === c.dataset.foco) ? "" : c.dataset.foco; sincro(); render();
-  });
-  const bf = document.getElementById("btn-filtros"), cf = document.getElementById("caja-filtros");
-  bf.onclick = () => {
-    const ab = cf.classList.toggle("abierta");
-    bf.classList.toggle("activo", ab);
-    document.getElementById("btn-fl").textContent = ab ? "▴" : "▾";
-  };
-
-  ["f-sec","f-est"].forEach(id => document.getElementById(id).onchange = render);
-
-  /* ?sec=<nombre> abre el tablero en una secretaría. Es lo que se reparte a
-     cada secretario: entra directo en lo suyo, sin tener que filtrar.       */
-  const pedida = new URLSearchParams(location.search).get("sec");
-  if (pedida){
-    const op = [...sel.options].find(o =>
-      o.value.toLowerCase() === pedida.trim().toLowerCase());
-    if (op) sel.value = op.value;
-  }
-  document.getElementById("f-txt").oninput = render;
-  document.getElementById("f-clr").onclick = () => {
-    ["f-sec","f-est","f-txt"].forEach(id => document.getElementById(id).value = "");
-    foco = ""; sincro(); render();
-  };
-}
-function sincro(){
-  document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c.dataset.foco === foco));
-}
-
-function filtrar(){
-  const sec = document.getElementById("f-sec").value;
-  const est = document.getElementById("f-est").value;
-  const txt = document.getElementById("f-txt").value.trim().toLowerCase();
-  return DATOS.filas.filter(f => {
-    if (sec && f.secretaria !== sec) return false;
-    if (txt && !(f.direccion.toLowerCase().includes(txt) ||
-                 (f.referente || "").toLowerCase().includes(txt))) return false;
-    const c = f.celdas[0], e = c.estado;
-    if (est === "reporto" && !["en_termino","tarde"].includes(e)) return false;
-    if (est === "falta"   && e !== "sin_reporte") return false;
-    if (est === "tarde"   && e !== "tarde") return false;
-    if (est === "sinnov"  && !c.sinNovedades) return false;
-    if (foco === "nop"      && !f.noOperativa) return false;
-    if (foco !== "nop" && est && f.noOperativa) return false;
-    if (foco === "mudas"    && f.rachaSinReporte < 2) return false;
-    if (foco === "frias"    && f.rachaSinNovedad < 3) return false;
-    if (foco === "falta"    && e !== "sin_reporte") return false;
-    if (foco === "criticas" && !DATOS.trabas.some(t =>
-        t.criticidad === "Alta" && t.direccion === f.direccion)) return false;
-    return true;
-  });
-}
-function trabasFiltradas(){
-  const sec = document.getElementById("f-sec").value;
-  const txt = document.getElementById("f-txt").value.trim().toLowerCase();
-  return DATOS.trabas.filter(t => {
-    if (sec && t.secretaria !== sec) return false;
-    if (txt && !(t.direccion.toLowerCase().includes(txt) ||
-                 t.descripcion.toLowerCase().includes(txt))) return false;
-    if (foco === "criticas" && t.criticidad !== "Alta") return false;
-    return true;
-  });
-}
-
-function render(){
-  const a = DATOS.periodos[0];
-  document.getElementById("h-periodo").textContent = a.corto;
-  document.getElementById("h-gen").textContent =
-    (a.abierto ? "cierra el " + a.limite : "cerrada") + " · " + DATOS.generado;
-
-  const esGab = vista === "gabinete";
-  document.querySelector(".f-fila:last-child")?.classList.toggle("oculto", esGab);
-  document.getElementById("f-est").classList.toggle("oculto", esGab);
-
-  const n = document.getElementById("nota-inicio");
-  if (DATOS.vigentes <= 2 && !esGab) {
-    n.style.display = "block";
-    n.innerHTML = "<b>Marcha blanca</b>El sistema lleva " + DATOS.vigentes +
-      (DATOS.vigentes === 1 ? " período" : " períodos") + " en funcionamiento. Los períodos " +
-      "anteriores al inicio no se cuentan como incumplimiento y no se muestran. " +
-      "Todavía no hay historia suficiente para leer rachas: conviene esperar al menos dos " +
-      "períodos cerrados antes de sacar conclusiones sobre un área.";
-  } else n.style.display = "none";
-
-  const fs = filtrar();
-  document.getElementById("tab-tr").textContent = DATOS.trabas.length;
-  if (vista === "gabinete") pintarGabinete(fs);
-  if (vista === "resumen") { pintarCifras(fs); pintarAtencion(fs); }
-  if (vista === "matriz")  pintarMatriz(fs);
-  if (vista === "indicadores") pintarIndicadores();
-  if (vista === "trabas")  pintarTrabas(trabasFiltradas());
-}
-
-/* ==========================================================================
-   VISTA GABINETE — para secretarios y el Intendente.
-   No mide cumplimiento del formulario: muestra qué está frenado, quién lo
-   destraba y hace cuánto. Solo entran las trabas que el CEM ya codificó.
-   ========================================================================== */
-
-const ORDEN_ANT = { "Más de tres meses":0, "Entre uno y tres meses":1,
-                    "Entre 15 días y un mes":2, "Menos de 15 días":3 };
-
-function frenosFiltrados(){
-  const sec = document.getElementById("f-sec").value;
-  const txt = document.getElementById("f-txt").value.trim().toLowerCase();
-  return (DATOS.frenos || []).filter(f => {
-    if (sec && f.secretaria !== sec) return false;
-    if (txt && !(f.resumen + " " + f.direccion + " " + f.categoria + " " + (f.quien||""))
-        .toLowerCase().includes(txt)) return false;
-    return true;
-  });
-}
-
-function pintarGabinete(fs){
-  const sec = document.getElementById("f-sec").value;
-  const per = DATOS.periodos[0];
-  const act = fs.filter(f => !f.noOperativa);
-  const rep = act.filter(f => ["en_termino","tarde"].includes(f.celdas[0].estado));
-  const fr  = frenosFiltrados();
-  const alt = fr.filter(f => f.prioridad === "Alta");
-
-  /* ---------- contexto ---------- */
-  document.getElementById("g-contexto").innerHTML =
-    `<div class="g-disc"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13"/>` +
-    `<path d="M9 21v-6h6v6"/></svg></div><div>` +
-    `<div class="g-ambito">${sec ? (sec === "Intendencia" ? "Intendencia"
-        : "Secretaría de " + esc(sec)) : "Esquina"}</div>` +
-    `<div class="g-per">${esc(per.corto)} <span class="vivo${per.abierto ? "" : " cerr"}">${
-        per.abierto ? "cierra el " + esc(per.limite) : "cerrada"}</span></div></div>`;
-
-  /* ---------- tres cifras ---------- */
-  const cif = (cls, n, sub, lbl) =>
-    `<div class="cifra ${cls}"><div class="n">${n}${
-      sub ? `<small>${sub}</small>` : ""}</div><div class="l">${lbl}</div></div>`;
-
-  document.getElementById("g-cifras").innerHTML =
-    cif("", rep.length, "/" + act.length, "Áreas informaron") +
-    cif(fr.length ? "ocre" : "", fr.length, "", "Frenos abiertos") +
-    cif(alt.length ? "rojo" : "", alt.length, "", "Prioridad alta");
-
-  /* ---------- quién destraba ---------- */
-  const porQuien = {};
-  fr.forEach(f => {
-    const k = (f.quien || "").trim() || "Sin destinatario indicado";
-    (porQuien[k] = porQuien[k] || []).push(f);
-  });
-  const quienes = Object.keys(porQuien)
-    .map(k => ({ quien: k, lista: porQuien[k],
-                 altas: porQuien[k].filter(x => x.prioridad === "Alta").length }))
-    .sort((a, b) => b.lista.length - a.lista.length || b.altas - a.altas);
-
-  const tope = quienes.length ? quienes[0].lista.length : 1;
-  document.getElementById("g-sec-quien").style.display = fr.length ? "" : "none";
-  document.getElementById("g-quien").innerHTML = quienes.map(q => `
-    <div class="qfila">
-      <div class="qnom">${esc(q.quien)}</div>
-      <div class="qbar"><span style="width:${Math.round(q.lista.length / tope * 100)}%"></span></div>
-      <div class="qn">${q.lista.length}${q.altas ? `<b> · ${q.altas} alta${
-        q.altas > 1 ? "s" : ""}</b>` : ""}</div>
-    </div>`).join("");
-
-  /* ---------- los frenos ---------- */
-  document.getElementById("g-cnt").textContent = fr.length;
-  const caja = document.getElementById("g-frenos");
-
-  if (!fr.length){
-    caja.innerHTML = `<div class="vacio">${
-      (DATOS.frenosSinCodificar || 0)
-        ? "Todavía no hay frenos codificados para mostrar acá."
-        : "No hay frenos abiertos" + (sec ? " en esta secretaría." : ".")}</div>`;
-  } else {
-    let html = "", pri = null, abrioResto = false;
-    fr.forEach(f => {
-      if (f.prioridad !== pri){
-        /* lo que no es prioridad alta queda plegado: el gabinete entra por
-           los cinco de arriba y despliega el resto si quiere */
-        if (pri === "Alta" && !abrioResto){
-          abrioResto = true;
-          const n = fr.length - fr.filter(x => x.prioridad === "Alta").length;
-          html += `<button class="ver-resto" id="ver-resto">Ver los ${n} restantes</button>` +
-                  `<div id="resto-frenos" class="oculto">`;
-        }
-        pri = f.prioridad;
-        html += `<div class="g-pri ${pri === "Alta" ? "alta"
-                  : pri === "Baja" ? "baja" : "media"}"><span>Prioridad ${
-                  esc(pri.toLowerCase())}</span></div>`;
-      }
-      const meses = f.quincenas > 1
-        ? `<span class="g-tag persiste">${f.quincenas} quincenas</span>` : "";
-      const anti = f.antiguedad
-        ? `<span class="g-tag">${esc(f.antiguedad.toLowerCase())}</span>` : "";
-      html += `
-        <article class="freno ${pri === "Alta" ? "alta" : pri === "Baja" ? "baja" : "media"}">
-          <div class="f-top">
-            <span class="f-cat">${esc(f.categoria || "Sin categoría")}</span>
-            ${meses}${anti}
-          </div>
-          <h3>${esc(f.resumen)}</h3>
-          <div class="f-area">${esc(f.direccion)}${
-            sec ? "" : ` · ${esc(f.secretaria === "Intendencia" ? "Intendencia"
-                                 : "Secretaría de " + f.secretaria)}`}</div>
-          ${f.pedido ? `<div class="f-pide"><b>Pide</b>${esc(f.pedido)}</div>` : ""}
-          <div class="f-quien">${f.quien
-            ? `<b>Resuelve</b>${esc(f.quien)}`
-            : `<span class="sin">Sin destinatario indicado</span>`}</div>
-        </article>`;
-    });
-    if (abrioResto) html += `</div>`;
-    caja.innerHTML = html;
-
-    const btn = document.getElementById("ver-resto");
-    if (btn) btn.onclick = () => {
-      const r = document.getElementById("resto-frenos");
-      const ab = r.classList.toggle("oculto");
-      btn.textContent = ab ? btn.dataset.cerrado : "Ver menos";
-      if (!btn.dataset.cerrado) btn.dataset.cerrado = "Ver los " +
-        r.querySelectorAll(".freno").length + " restantes";
-      if (ab) btn.textContent = btn.dataset.cerrado;
-    };
-  }
-
-  /* ---------- estado de las áreas ---------- */
-  const grupo = { informaron: [], faltan: [], noOp: [] };
-  fs.forEach(f => {
-    if (f.noOperativa) grupo.noOp.push(f);
-    else if (["en_termino","tarde"].includes(f.celdas[0].estado)) grupo.informaron.push(f);
-    else grupo.faltan.push(f);
-  });
-
-  const pastilla = (lista, cls) => lista.length
-    ? `<div class="g-lista">${lista.map(f =>
-        `<span class="pill ${cls}">${esc(f.direccion)}</span>`).join("")}</div>` : "";
-
-  document.getElementById("g-areas").innerHTML =
-    (grupo.informaron.length
-      ? `<div class="gab-grupo verde">Informaron · ${grupo.informaron.length}</div>` +
-        pastilla(grupo.informaron, "v") : "") +
-    (grupo.faltan.length
-      ? `<div class="gab-grupo ocre">${per.abierto ? "Todavía no informaron" : "No informaron"} · ${
-          grupo.faltan.length}</div>` + pastilla(grupo.faltan, "a") : "") +
-    (grupo.noOp.length
-      ? `<div class="gab-grupo gris">Áreas no operativas · ${grupo.noOp.length}</div>` +
-        pastilla(grupo.noOp, "g") : "");
-
-  /* ---------- pie ---------- */
-  const pie = document.getElementById("g-pie");
-  const sc = DATOS.frenosSinCodificar || 0;
-  if (sc){
-    pie.style.display = "block";
-    pie.innerHTML = `<b>Nota del CEM</b>Hay ${sc} ${sc === 1
-      ? "traba informada que todavía no fue revisada"
-      : "trabas informadas que todavía no fueron revisadas"} y por eso no ${
-      sc === 1 ? "figura" : "figuran"} en esta vista.`;
-  } else pie.style.display = "none";
-}
-
-function pintarCifras(fs){
-  /* las áreas no operativas quedan fuera de todos los denominadores */
-  const act   = fs.filter(f => !f.noOperativa);
-  const nop   = fs.length - act.length;
-  const total = act.length;
-  const rep   = act.filter(f => ["en_termino","tarde"].includes(f.celdas[0].estado)).length;
-  const mudas = act.filter(f => f.rachaSinReporte >= 2).length;
-  const frias = act.filter(f => f.rachaSinNovedad >= 3).length;
-  const crit  = DATOS.trabas.filter(t => t.criticidad === "Alta" &&
-                  act.some(f => f.direccion === t.direccion)).length;
-  const c = (id, cls, n, sub, lbl) => `<button class="cifra ${cls} ${foco===id?"on":""}" data-foco="${id}">
-      <div class="n">${n}${sub||""}</div><div class="l">${lbl}</div></button>`;
-  document.getElementById("cifras").innerHTML =
-    c("", rep === total && total ? "verde" : "", rep, `<small>/${total}</small>`,
-      "Direcciones que reportaron el período en curso") +
-    c("mudas", mudas ? "rojo" : "", mudas, "", "Áreas sin reportar dos períodos seguidos o más") +
-    c("frias", frias ? "ambar" : "", frias, "", "Áreas sin novedades destacadas hace tres períodos") +
-    c("criticas", crit ? "rojo" : "", crit, "", "Trabas de criticidad alta sin cerrar") +
-    (nop ? c("nop", "gris", nop, "", "Áreas no operativas, excluidas de los conteos") : "");
-  document.querySelectorAll(".cifra").forEach(b => b.onclick = () => {
-    foco = (foco === b.dataset.foco) ? "" : b.dataset.foco; sincro(); render();
-  });
-}
-
-function pintarAtencion(fs){
-  const G = [
-    { cls:"r", tit:"Silencio sostenido",
-      sub:"No reportan dos períodos seguidos o más. Verificar circuito antes de asumir inactividad.",
-      items: fs.filter(f => f.rachaSinReporte >= 2).map(f => ({
-        sec:f.secretaria, tit:f.direccion,
-        txt:`Sin reporte en ${f.rachaSinReporte} ${f.rachaSinReporte===1?"período":"períodos"} consecutivos. Antes de concluir que el área está detenida, confirmar que el referente sigue en funciones y tiene el enlace.`,
-        meta:f.referente ? "Referente: " + f.referente : "Sin referente cargado en el sistema" })) },
-    { cls:"r", tit:"Trabas de criticidad alta",
-      sub:"Declaradas por las áreas y pendientes de resolución.",
-      items: DATOS.trabas.filter(t => t.criticidad === "Alta" && fs.some(f => f.direccion === t.direccion))
-        .map(t => ({ sec:t.secretaria, tit:t.direccion, txt:t.descripcion,
-          meta:`Pide: ${t.pedido || "—"} · Resuelve: ${t.quien || "—"} · Trabado hace ${(t.antiguedad||"—").toLowerCase()}` })) },
-    { cls:"a", tit:"Sin novedades sostenido",
-      sub:"Reportan en término pero sin nada destacado hace tres períodos o más.",
-      items: fs.filter(f => f.rachaSinNovedad >= 3).map(f => ({
-        sec:f.secretaria, tit:f.direccion,
-        txt:`Marca "sin novedades destacadas" hace ${f.rachaSinNovedad} períodos. Puede ser el caudal normal del área o puede ser inmovilidad: conviene conversarlo con el secretario antes de concluir.`,
-        meta:f.referente ? "Referente: " + f.referente : "" })) },
-    { cls:"a", tit:"Falta el período en curso",
-      sub:"Primera ausencia. Suele resolverse con un recordatorio.",
-      items: fs.filter(f => f.celdas[0].estado === "sin_reporte" && f.rachaSinReporte === 1).map(f => ({
-        sec:f.secretaria, tit:f.direccion, txt:"No presentó el reporte del período en curso.",
-        meta:f.referente ? "Referente: " + f.referente : "Sin referente cargado" })) }
-  ].filter(g => g.items.length);
-
-  const total = G.reduce((a,g) => a + g.items.length, 0);
-  document.getElementById("c-at").textContent = total;
-  document.getElementById("atencion").innerHTML = total ? G.map((g,i) => `
-    <div class="grupo">
-      <button class="g-cab ${i===0?"abierto":""}" data-g="${i}">
-        <span class="g-marca ${g.cls}"></span>
-        <span class="g-txt"><span class="g-tit">${esc(g.tit)}</span><span class="g-sub">${esc(g.sub)}</span></span>
-        <span class="g-n">${g.items.length}</span><span class="g-fl">▶</span>
-      </button>
-      <div class="g-cuerpo ${i===0?"":"oculto"}" data-c="${i}">
-        ${g.items.map(it => `<div class="at-row">
-            <div class="at-marca ${g.cls}"></div>
-            <div class="at-cuerpo">
-              <div class="at-sec">${esc(it.sec)}</div>
-              <div class="at-tit">${esc(it.tit)}</div>
-              <div class="at-txt">${esc(it.txt)}</div>
-              ${it.meta ? `<div class="at-meta">${esc(it.meta)}</div>` : ""}
-            </div></div>`).join("")}
-      </div>
-    </div>`).join("")
-    : `<div class="vacio">Ninguna dirección requiere atención con los filtros aplicados.</div>`;
-
-  document.querySelectorAll(".g-cab").forEach(b => b.onclick = () => {
-    b.classList.toggle("abierto");
-    document.querySelector(`[data-c="${b.dataset.g}"]`).classList.toggle("oculto");
-  });
-}
-
-/* Columnas visibles de la matriz: solo los períodos desde que arrancó el
-   sistema, y en orden cronológico — el más viejo a la izquierda.           */
-function columnas(){
-  const ix = DATOS.periodos.map((p, i) => i).filter(i => !DATOS.periodos[i].previo);
-  return (ix.length ? ix : DATOS.periodos.map((p, i) => i)).reverse();
-}
-
-function pintarMatriz(fs){
-  const cols = columnas(), nc = cols.length + 2;
-  document.getElementById("c-mx").textContent = fs.length + " de " + DATOS.filas.length;
-  document.getElementById("m-head").innerHTML = `<tr><th>Dirección</th>
-      ${cols.map(i => { const p = DATOS.periodos[i];
-        return `<th class="per">${esc(p.corto.replace(" quincena de "," q. "))}<span>${
-          p.abierto ? "abierto" : "cerrado"}</span></th>`; }).join("")}
-      <th class="per">Racha</th></tr>`;
-  if (!fs.length) {
-    document.getElementById("m-body").innerHTML =
-      `<tr><td colspan="${nc}" style="text-align:center;padding:30px;color:var(--gris)">No hay direcciones que coincidan con los filtros.</td></tr>`;
-    return;
-  }
-  const porSec = {};
-  fs.forEach(f => (porSec[f.secretaria] = porSec[f.secretaria] || []).push(f));
-  let html = "";
-  Object.keys(porSec).forEach(sec => {
-    html += `<tr class="sec-fila"><td colspan="${nc}">${esc(sec)}</td></tr>`;
-    porSec[sec].forEach(f => {
-      html += `<tr class="${f.noOperativa ? "fila-nop" : ""}"><td class="dir">${esc(f.direccion)}${
-          f.noOperativa ? `<span class="ref">sin designación — área no operativa</span>`
-                        : (f.referente ? `<span class="ref">${esc(f.referente)}</span>` : "")}</td>
-        ${cols.map(i => celda(f.celdas[i])).join("")}<td class="racha">${rachaTag(f)}</td></tr>`;
-    });
-  });
-  document.getElementById("m-body").innerHTML = html;
-}
-
-const NUM = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 2 });
-
-function pintarIndicadores(){
-  const sec = document.getElementById("f-sec").value;
-  const txt = document.getElementById("f-txt").value.trim().toLowerCase();
-  const visibles = new Set(filtrar().map(f => f.codigo));
-  const ids = columnas().map(i => DATOS.periodos[i].id);   // del más viejo al más nuevo
-
-  const porArea = {};
-  (DATOS.indicadores || []).forEach(s => {
-    if (!visibles.has(s.codigo)) return;
-    if (sec && s.secretaria !== sec) return;
-    if (txt && !(s.direccion.toLowerCase().includes(txt) ||
-                 s.label.toLowerCase().includes(txt))) return;
-    (porArea[s.codigo] = porArea[s.codigo] || { dir:s.direccion, sec:s.secretaria, series:[] }).series.push(s);
-  });
-
-  const areas = Object.keys(porArea);
-  document.getElementById("c-ind").textContent = areas.length + " áreas";
-
-  if (!areas.length) {
-    document.getElementById("indicadores").innerHTML =
-      `<div class="vacio">Todavía no hay indicadores cargados, o ninguno coincide con los filtros.
-       Los indicadores aparecen acá una vez que las áreas empiezan a reportar.</div>`;
-    return;
-  }
-
-  document.getElementById("indicadores").innerHTML = areas.map(cod => {
-    const a = porArea[cod];
-    return `<div class="ind-area">
-      <div class="ind-cab">
-        <div class="ind-dir">${esc(a.dir)}</div>
-        <div class="ind-sec">${esc(a.sec)}</div>
-      </div>
-      <div class="ind-scroll"><table class="ind-tabla">
-        <thead><tr><th>Indicador</th>
-          ${ids.map(id => `<th class="v">${esc(etiquetaPeriodo(id))}</th>`).join("")}
-          <th class="v">Variación</th></tr></thead>
-        <tbody>${a.series.map(s => filaIndicador(s, ids)).join("")}</tbody>
-      </table></div>
-    </div>`;
-  }).join("");
-}
-
-function etiquetaPeriodo(id){
-  const p = DATOS.periodos.find(x => x.id === id);
-  if (!p) return id;
-  const m = p.corto.match(/^(\d)ª quincena de (\w{3})/);
-  return m ? m[1] + "ª " + m[2] : p.corto;
-}
-
-function filaIndicador(s, ids){
-  const vals = ids.map(id => s.valores[id]);
-  const conDato = vals.map((v,i) => v === undefined ? null : i).filter(i => i !== null);
-  let delta = `<span class="delta igual">—</span>`;
-
-  if (conDato.length >= 2) {
-    const ult = vals[conDato[conDato.length-1]], prev = vals[conDato[conDato.length-2]];
-    const d = ult - prev;
-    if (d === 0) delta = `<span class="delta igual">sin cambio</span>`;
-    else {
-      const pct = prev ? Math.round(Math.abs(d) / Math.abs(prev) * 100) : null;
-      delta = `<span class="delta ${d > 0 ? "sube" : "baja"}">${d > 0 ? "▲" : "▼"} ${NUM.format(Math.abs(d))}${pct !== null ? " · " + pct + "%" : ""}</span>`;
-    }
-  } else if (conDato.length === 1) {
-    delta = `<span class="delta igual">primer dato</span>`;
-  }
-
-  const ultimoIdx = conDato.length ? conDato[conDato.length-1] : -1;
-  return `<tr>
-    <td><div class="ind-nom">${esc(s.label)}</div><div class="ind-uni">${esc(s.unidad)}</div>
-      ${sparkline(vals)}</td>
-    ${vals.map((v,i) => `<td class="ind-val ${v === undefined ? "nd" : ""} ${i === ultimoIdx ? "ult" : ""}">${v === undefined ? "—" : NUM.format(v)}</td>`).join("")}
-    <td style="text-align:center">${delta}</td></tr>`;
-}
-
-function sparkline(vals){
-  const pts = vals.map((v,i) => v === undefined ? null : {i, v}).filter(Boolean);
-  if (pts.length < 2) return "";
-  const vs = pts.map(p => p.v), min = Math.min(...vs), max = Math.max(...vs);
-  const w = 130, h = 22, rango = (max - min) || 1;
-  const xy = pts.map(p => [
-    (p.i / Math.max(vals.length - 1, 1)) * (w - 4) + 2,
-    h - 3 - ((p.v - min) / rango) * (h - 6)
-  ]);
-  const d = xy.map((c,i) => (i ? "L" : "M") + c[0].toFixed(1) + " " + c[1].toFixed(1)).join(" ");
-  const fin = xy[xy.length-1];
-  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
-    <path d="${d}" fill="none" stroke="#1a5a92" stroke-width="1.6"
-      stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>
-    <circle cx="${fin[0].toFixed(1)}" cy="${fin[1].toFixed(1)}" r="2.4" fill="#12406b"/></svg>`;
-}
-
-function pintarTrabas(tr){
-  document.getElementById("c-tr").textContent = tr.length;
-  document.getElementById("trabas").innerHTML = tr.length ? tr.map(t => `
-      <div class="traba ${t.criticidad.toLowerCase()}">
-        <div class="tr-cab">
-          <div class="tr-dir">${esc(t.direccion)}<small>${esc(t.secretaria)}</small></div>
-          <span class="tag ${t.criticidad==="Alta"?"r":t.criticidad==="Media"?"a":"g"}">${t.criticidad}</span>
-        </div>
-        <div class="tr-desc">${esc(t.descripcion)}</div>
-        ${t.pedido ? `<div class="tr-pide"><b>Qué se pide</b>${esc(t.pedido)}</div>` : ""}
-        <div class="tr-meta">
-          <span>Resuelve: <b>${esc(t.quien || "—")}</b></span>
-          <span>Trabado hace: <b>${esc(t.antiguedad || "—")}</b></span>
-          <span>Reportado en: <b>${esc(t.periodo)}</b></span>
-        </div>
-      </div>`).join("")
-    : `<div class="vacio">No hay trabas abiertas con los filtros aplicados.</div>`;
-}
-
-function celda(c){
-  if (c.estado === "no_operativa") return `<td class="cel"><span class="celda c-nop">·<small>no oper.</small></span></td>`;
-  if (c.estado === "previo")      return `<td class="cel"><span class="celda c-previo">·<small>—</small></span></td>`;
-  if (c.estado === "pendiente")   return `<td class="cel"><span class="celda c-pend">·<small>abierto</small></span></td>`;
-  if (c.estado === "sin_reporte") return `<td class="cel"><span class="celda c-nada">—<small>sin rep.</small></span></td>`;
-  const cls = c.sinNovedades ? "c-sinnov" : (c.estado === "tarde" ? "c-tarde" : "c-ok");
-  const et  = c.sinNovedades ? "sin nov." : (c.estado === "tarde" ? "tarde" : c.fecha || "en térm.");
-  return `<td class="cel"><span class="celda ${cls}">${c.acciones}<small>${et}</small>
-    ${c.criticas ? '<span class="punto"></span>' : ""}</span></td>`;
-}
-function rachaTag(f){
-  if (f.noOperativa) return `<span class="tag g">no oper.</span>`;
-  if (f.rachaSinReporte >= 2) return `<span class="tag r">${f.rachaSinReporte} sin rep.</span>`;
-  if (f.rachaSinNovedad >= 3) return `<span class="tag a">${f.rachaSinNovedad} sin nov.</span>`;
-  return `<span class="tag g">—</span>`;
-}
-function esc(s){ return String(s == null ? "" : s)
-  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
-/* ==========================================================================
-   DATOS DE DEMOSTRACIÓN — solo se usan si no hay backend conectado
-   ========================================================================== */
-function generarDemo(){
-  const MES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto",
-               "septiembre","octubre","noviembre","diciembre"];
-  const hoy = new Date();
-  let a = hoy.getFullYear(), m = hoy.getMonth(), q = hoy.getDate() >= 16 ? 1 : 2;
-  if (q === 2 && hoy.getDate() < 16) { m--; if (m < 0){ m = 11; a--; } }
-
-  const periodos = [];
-  let ca = a, cm = m, cq = q;
-  for (let i = 0; i < N_PERIODOS; i++){
-    periodos.push({ id:`${ca}-${String(cm+1).padStart(2,"0")}-Q${cq}`,
-      corto:`${cq===1?"1ª":"2ª"} quincena de ${MES[cm]}`,
-      abierto: i === 0, limite: cq===1 ? "18/"+String(cm+1).padStart(2,"0") : "03/"+String(cm+2).padStart(2,"0") });
-    if (cq === 2) cq = 1; else { cq = 2; cm--; if (cm < 0){ cm = 11; ca--; } }
-  }
-
-  const NOMBRES = ["M. Acosta","J. Benítez","R. Cabral","L. Duarte","S. Escobar","P. Fernández",
-    "N. Gómez","C. Herrera","V. Insaurralde","A. Ledesma","F. Maidana","G. Núñez","D. Ojeda",
-    "T. Pereyra","E. Quiroz","B. Ramírez","H. Sosa","I. Torres","O. Vallejos","K. Zaracho"];
-
-  /* perfiles: cómo se comporta cada área en la simulación */
-  const perfil = c => {
-    if (["obr-servicios","sal-saludpublica","gob-inspeccion","hac-tesoreria","dh-accionsocial",
-         "tc-festividades","cg-cem"].includes(c))                        return "alto";
-    if (["int-escribania","tc-patrimonio","dp-empleo","dh-genero"].includes(c)) return "frio";
-    if (["gob-defensacivil","dp-medioambiente"].includes(c))             return "mudo";
-    return "normal";
-  };
-
-  const codigos = Object.keys(CATALOGO);
-  const filas = codigos.map((c, k) => {
-    const u = CATALOGO[c], p = perfil(c);
-    const celdas = periodos.map((per, i) => {
-      if (p === "mudo" && i <= 2)
-        return i === 0 && per.abierto ? {estado:"pendiente"} : {estado:"sin_reporte"};
-      if (per.abierto && (k % 7 === 3))  return {estado:"pendiente"};
-      const tarde = (k + i) % 11 === 0;
-      const sinNov = p === "frio" ? i <= 3 : (k + i * 3) % 9 === 0;
-      const acc = p === "alto" ? 3 + ((k + i) % 3) : sinNov ? 1 : 1 + ((k + i) % 3);
-      return { estado: tarde ? "tarde" : "en_termino", acciones: acc,
-               sinNovedades: sinNov, trabas: (k + i) % 5 === 0 ? 1 : 0,
-               criticas: (k * 3 + i) % 17 === 0 ? 1 : 0,
-               fecha: `${String(2 + (k % 3)).padStart(2,"0")}/${String((cm+2) % 12 + 1).padStart(2,"0")}` };
-    });
-    return { codigo:c, secretaria:u.sec, direccion:u.dir,
-             referente:NOMBRES[k % NOMBRES.length], celdas, rachaSinReporte:0, rachaSinNovedad:0 };
-  });
-
-  const trabas = [
-    { periodo:periodos[0].id, codigo:"obr-servicios", secretaria:"Obras y Servicios Públicos",
-      direccion:"Dirección de Servicios Públicos", criticidad:"Alta",
-      descripcion:"Dos de los tres camiones recolectores están fuera de servicio por falta de repuestos. El circuito de la zona sur se está cubriendo día por medio.",
-      pedido:"Autorización de compra directa de repuestos por urgencia, o alquiler de una unidad por treinta días.",
-      quien:"Contabilidad y Administración (compras)", antiguedad:"Entre 15 días y un mes" },
-    { periodo:periodos[1].id, codigo:"sal-saludpublica", secretaria:"Salud Pública",
-      direccion:"Dirección de Salud Pública", criticidad:"Alta",
-      descripcion:"Faltan siete medicamentos del listado de esenciales en la Farmacia Municipal. La provisión provincial no llega desde hace seis semanas.",
-      pedido:"Gestión de Intendencia ante el Ministerio de Salud Provincial, o partida para compra local de emergencia.",
-      quien:"Intendencia", antiguedad:"Entre uno y tres meses" },
-    { periodo:periodos[0].id, codigo:"dp-educacion", secretaria:"Desarrollo Productivo",
-      direccion:"Dirección de Educación", criticidad:"Alta",
-      descripcion:"El convenio con la universidad para el segundo cuatrimestre está sin firmar. Hay 34 inscriptos esperando confirmación.",
-      pedido:"Dictamen sobre el borrador del convenio y fecha de firma.",
-      quien:"Asesoría Letrada", antiguedad:"Más de tres meses" },
-    { periodo:periodos[0].id, codigo:"dh-adultosmayores", secretaria:"Desarrollo Humano",
-      direccion:"Dirección de Políticas para Adultos Mayores", criticidad:"Media",
-      descripcion:"Faltan dos cuidadoras para cubrir el turno noche. Se está cubriendo con horas extra del personal existente.",
-      pedido:"Definición sobre incorporación o reasignación interna de personal.",
-      quien:"Recursos Humanos y Personal", antiguedad:"Entre uno y tres meses" },
-    { periodo:periodos[1].id, codigo:"hac-ingresos", secretaria:"Hacienda y Finanzas",
-      direccion:"Dirección de Ingresos Públicos", criticidad:"Media",
-      descripcion:"Los padrones impositivos no cruzan con el catastro físico. Hay inmuebles con obra nueva sin actualizar la valuación.",
-      pedido:"Mesa de trabajo con Catastro y Urbanismo para definir el procedimiento de cruce periódico.",
-      quien:"Otra dirección", antiguedad:"Más de tres meses" },
-    { periodo:periodos[0].id, codigo:"tc-turismo", secretaria:"Turismo y Cultura",
-      direccion:"Dirección de Promoción Turística", criticidad:"Media",
-      descripcion:"El parador de la costanera no tiene conexión a internet, lo que impide cargar las consultas de visitantes en el registro.",
-      pedido:"Instalación de conectividad en el punto.",
-      quien:"Planificación y Modernización (informática)", antiguedad:"Menos de 15 días" },
-    { periodo:periodos[2].id, codigo:"gob-administracion", secretaria:"Gobierno",
-      direccion:"Dirección de Administración y Servicios", criticidad:"Baja",
-      descripcion:"Falta señalización interna en la Terminal de Ómnibus. Genera consultas constantes al personal.",
-      pedido:"Diseño e impresión de cartelería.",
-      quien:"Coordinación General", antiguedad:"Entre 15 días y un mes" }
-  ];
-
-  return { ok:true, generado:`${String(hoy.getDate()).padStart(2,"0")}/${String(hoy.getMonth()+1).padStart(2,"0")}/${hoy.getFullYear()} ${String(hoy.getHours()).padStart(2,"0")}:${String(hoy.getMinutes()).padStart(2,"0")}`,
-           periodos, filas, trabas };
-}
-</script>
-</body>
-</html>
+if (typeof module !== "undefined") module.exports = { CATALOGO, SECRETARIAS };
