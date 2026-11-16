@@ -56,6 +56,34 @@ h1{font-size:21px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
 .bloque .ayuda{font-size:13.5px;color:var(--gris);margin-top:5px;line-height:1.5}
 .cuerpo{padding:15px 16px 17px}
 
+/* ---------- nube de ayuda (qué es una novedad) ---------- */
+.nube{margin-top:11px;border:1px solid #e8d5a8;background:#fdf9f0;
+  border-radius:var(--r-sm);overflow:hidden}
+.nube > summary{list-style:none;cursor:pointer;padding:9px 12px;
+  font-size:13px;font-weight:600;color:var(--ocre);
+  display:flex;align-items:center;gap:7px;user-select:none}
+.nube > summary::-webkit-details-marker{display:none}
+.nube > summary::before{content:"?";flex:0 0 17px;height:17px;border-radius:99px;
+  background:var(--ocre);color:#fff;font-size:11px;font-weight:700;
+  display:grid;place-items:center;line-height:1}
+.nube > summary::after{content:"ver";margin-left:auto;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.09em;text-transform:uppercase;opacity:.7;font-weight:600}
+.nube[open] > summary::after{content:"cerrar"}
+.nube-cuerpo{padding:2px 12px 13px;font-size:13.5px;line-height:1.55;color:var(--tinta)}
+.nube-cuerpo p{color:var(--gris);margin-bottom:9px}
+.nube h4{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ocre);font-weight:600;margin:13px 0 7px}
+.nube ul{list-style:none;display:grid;gap:7px}
+.nube li{display:flex;gap:8px;align-items:flex-start}
+.nube li .mk{flex:0 0 auto;font-weight:700;line-height:1.5}
+.nube .si .mk{color:var(--verde)}
+.nube .no .mk{color:var(--rojo)}
+.nube li b{font-weight:600}
+.nube li i{font-style:normal;color:var(--gris);display:block;font-size:12.5px}
+.nube .regla{margin-top:13px;padding:9px 11px;background:#fff;border-radius:var(--r-sm);
+  border-left:3px solid var(--ocre);font-size:13px}
+.nube .regla b{font-weight:600}
+
 /* ---------- campos ---------- */
 label{display:block;font-size:13.5px;font-weight:600;margin-bottom:5px}
 .op{font-weight:400;color:var(--gris);font-size:12.5px}
@@ -240,6 +268,40 @@ footer{text-align:center;font-size:12px;color:var(--gris);padding:26px 16px 8px;
         <h2>Novedad destacada</h2>
         <div class="ayuda">Una sola. Lo que el liderazgo debería saber de esta área en este
           período. Si no hubo nada relevante, marcalo: es una respuesta válida.</div>
+
+        <details class="nube">
+          <summary>¿Qué contamos como novedad?</summary>
+          <div class="nube-cuerpo">
+            <p>El CEM clasifica cada novedad antes de elevarla. Estas son las tres que
+              llegan al Gabinete:</p>
+            <ul>
+              <li class="si"><span class="mk">&#10003;</span><span>
+                <b>Logro o resultado.</b> Algo terminó y dejó un resultado contable.
+                <i>Cerró el curso de panadería con 18 egresados.</i></span></li>
+              <li class="si"><span class="mk">&#10003;</span><span>
+                <b>Hito o inicio.</b> Algo arrancó y marca el comienzo de un proceso.
+                <i>Arrancó el relevamiento territorial: 2 de 20 barrios.</i></span></li>
+              <li class="si"><span class="mk">&#10003;</span><span>
+                <b>Actividad o evento.</b> Un operativo, una jornada, una campaña.
+                <i>19 operativos de control vehicular, 268 actas.</i></span></li>
+            </ul>
+
+            <h4>Lo que no va acá</h4>
+            <ul>
+              <li class="no"><span class="mk">&times;</span><span>
+                <b>Un problema o un pedido.</b> Va al bloque 04, Trabas. Si lo cargás acá
+                no le llega a nadie que pueda resolverlo.</span></li>
+              <li class="no"><span class="mk">&times;</span><span>
+                <b>La rutina del área.</b> Lo que pasa todas las quincenas ya se mide en
+                los indicadores del bloque 05. Si el período fue normal, marcá
+                &ldquo;sin novedades destacadas&rdquo;: no es una falta.</span></li>
+            </ul>
+
+            <div class="regla"><b>El impacto necesita un número.</b> Cuántas personas,
+              cuántos barrios, cuántos casos. &ldquo;Ciudadanía en general&rdquo; no se
+              puede comparar con la quincena anterior, así que no se eleva.</div>
+          </div>
+        </details>
       </div>
       <div class="cuerpo">
         <label class="check" for="sin-nov">
