@@ -335,6 +335,41 @@ button.cifra:active{transform:scale(.98)}
 }
 .ver-resto:hover{background:var(--blue-50); border-style:solid; border-color:var(--brand)}
 .ver-resto:active{transform:scale(.98)}
+/* ------------------------- lo que pasó ------------------------- */
+#g-nov{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:10px}
+.nov{
+  background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
+  border-top:4px solid var(--brand); padding:14px 16px 13px; box-shadow:var(--sh);
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.nov:hover{transform:translateY(-3px); box-shadow:var(--sh-md)}
+.nov.logro{border-top-color:var(--verde)}
+.nov.hito{border-top-color:var(--brand)}
+.nov.activ{border-top-color:var(--sun)}
+.nov.rut{border-top-color:var(--ink-300)}
+.nv-top{display:flex; flex-wrap:wrap; gap:7px; align-items:center}
+.nv-tipo{
+  font-family:var(--f-head); font-weight:800; font-size:9.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-400);
+}
+.nov.logro .nv-tipo{color:var(--verde)}
+.nov.hito .nv-tipo{color:var(--brand-700)}
+.nov.activ .nv-tipo{color:#a8740a}
+.nv-num{
+  font-family:var(--f-head); font-weight:800; font-size:11.5px; color:var(--brand-700);
+  background:var(--blue-50); border:1px solid var(--blue-100);
+  padding:2px 10px; border-radius:var(--pill);
+}
+.nov h3{
+  font-family:var(--f-head); font-weight:800; font-size:15px; line-height:1.3;
+  margin:7px 0 5px; color:var(--ink); letter-spacing:-.01em;
+}
+.nv-area{font-size:12px; color:var(--ink-500); font-weight:600}
+@media(max-width:560px){
+  #g-nov{grid-template-columns:1fr}
+  .nov{padding:13px 14px}
+}
+
 /* ---------------------- botones de contacto ---------------------- */
 .bc-fila{
   display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center;
@@ -828,6 +863,11 @@ footer{
   <div id="v-gabinete">
     <div id="g-contexto" class="g-ctx"></div>
     <div class="cifras" id="g-cifras"></div>
+
+    <section id="g-sec-nov">
+      <div class="stit"><h2>Lo que pasó</h2><span class="cnt" id="g-ncnt">0</span></div>
+      <div id="g-nov"></div>
+    </section>
 
     <section id="g-sec-quien">
       <div class="stit"><h2>Quién tiene que destrabar</h2></div>
@@ -1469,6 +1509,29 @@ function pintarGabinete(fs){
     cif(fr.length ? "ocre" : "", fr.length, "", "Frenos abiertos") +
     cif(alt.length ? "rojo" : "", alt.length, "", "Prioridad alta");
 
+  /* ---------- lo que pasó ---------- */
+  const ICO = {
+    "Logro o resultado":  "logro",
+    "Hito o inicio":      "hito",
+    "Actividad o evento": "activ",
+    "Rutina":             "rut"
+  };
+  const nov = (DATOS.novedades || []).filter(n => !sec || n.secretaria === sec);
+  document.getElementById("g-sec-nov").style.display = nov.length ? "" : "none";
+  document.getElementById("g-ncnt").textContent = nov.length;
+  document.getElementById("g-nov").innerHTML = nov.map(n => `
+    <article class="nov ${ICO[n.tipo] || "rut"}">
+      <div class="nv-top">
+        <span class="nv-tipo">${esc(n.tipo || "Novedad")}</span>
+        ${n.alcance === "Cuantificado" && n.impacto
+          ? `<span class="nv-num">${esc(n.impacto)}</span>` : ""}
+      </div>
+      <h3>${esc(n.resumen)}</h3>
+      <div class="nv-area">${esc(n.direccion)}${
+        sec ? "" : ` · ${esc(n.secretaria === "Intendencia" ? "Intendencia"
+                            : "Secretaría de " + n.secretaria)}`}</div>
+    </article>`).join("");
+
   /* ---------- quién destraba ---------- */
   const porQuien = {};
   fr.forEach(f => {
@@ -1591,12 +1654,15 @@ function pintarGabinete(fs){
   /* ---------- pie ---------- */
   const pie = document.getElementById("g-pie");
   const sc = DATOS.frenosSinCodificar || 0;
-  if (sc){
+  const sn = DATOS.novSinCodificar || 0;
+  if (sc || sn){
+    const partes = [];
+    if (sc) partes.push(sc + (sc === 1 ? " traba" : " trabas"));
+    if (sn) partes.push(sn + (sn === 1 ? " novedad" : " novedades"));
     pie.style.display = "block";
-    pie.innerHTML = `<b>Nota del CEM</b>Hay ${sc} ${sc === 1
-      ? "traba informada que todavía no fue revisada"
-      : "trabas informadas que todavía no fueron revisadas"} y por eso no ${
-      sc === 1 ? "figura" : "figuran"} en esta vista.`;
+    pie.innerHTML = `<b>Nota del CEM</b>${partes.join(" y ")} de este período ` +
+      `${sc + sn === 1 ? "está pendiente" : "están pendientes"} de revisión, ` +
+      `así que todavía no ${sc + sn === 1 ? "aparece" : "aparecen"} acá.`;
   } else pie.style.display = "none";
 }
 
