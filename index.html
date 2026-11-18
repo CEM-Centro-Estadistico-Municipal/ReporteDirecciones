@@ -681,10 +681,27 @@ function pintarIndicadores(){
         <div class="n">${i.label}</div>
         <div class="u">${i.unidad}</div>
       </div>
-      <input type="number" class="i-val" data-id="${i.id}" data-label="${completo}"
-             data-unidad="${i.unidad}" min="0" step="any" inputmode="decimal" placeholder="—">
+      <input type="text" class="i-val" data-id="${i.id}" data-label="${completo}"
+             data-unidad="${i.unidad}" inputmode="decimal" autocomplete="off"
+             placeholder="${i.unidad === "porcentaje" ? "ej. 1,175" : "—"}">
     </div>`;
   }).join("");
+}
+
+/* Interpreta lo que escribió la persona. Devuelve el número, "" si dejó
+   el campo vacío, o null si escribió algo que no se puede leer.
+     "1,175"    -> 1.175    (coma decimal, lo normal acá)
+     "1.175,50" -> 1175.5   (punto de miles + coma decimal)
+     "1.175"    -> 1.175    (sin coma, el punto es decimal)
+     "1,175 %"  -> 1.175    (se ignoran el signo y los espacios)       */
+function aNumero(txt){
+  let s = String(txt == null ? "" : txt).trim();
+  if (!s) return "";
+  s = s.replace(/\s/g, "").replace(/%/g, "");
+  if (s.indexOf(",") !== -1) s = s.replace(/\./g, "").replace(",", ".");
+  if (!/^-?\d*\.?\d+$/.test(s)) return null;
+  const n = Number(s);
+  return isNaN(n) ? null : n;
 }
 
 /* ---------- validación y envío ---------- */
@@ -732,11 +749,20 @@ function enviar(){
     });
   });
 
+  /* Los campos son de texto para que la coma decimal no se pierda: un
+     input numérico, segun el navegador, devuelve vacío cuando se escribe
+     "1,175". Acá se interpreta y, si no se entiende, se avisa en vez de
+     mandar un número equivocado.                                        */
   const indicadores = [];
-  document.querySelectorAll(".i-val").forEach(el => indicadores.push({
-    id: el.dataset.id, label: el.dataset.label,
-    unidad: el.dataset.unidad, valor: el.value === "" ? "" : Number(el.value)
-  }));
+  document.querySelectorAll(".i-val").forEach(el => {
+    const v = aNumero(el.value);
+    if (v === null) errs.push(`El indicador &ldquo;${el.dataset.label}&rdquo; no se entiende: ` +
+                              `escribí solo el número.`);
+    indicadores.push({
+      id: el.dataset.id, label: el.dataset.label,
+      unidad: el.dataset.unidad, valor: v === null ? "" : v
+    });
+  });
 
   const box = document.getElementById("aviso-error");
   if (errs.length){
