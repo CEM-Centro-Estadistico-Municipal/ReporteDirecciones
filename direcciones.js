@@ -194,7 +194,9 @@ const CATALOGO = {
     indicadores: [
       { id: "reclamos_ing", label: "Reclamos ingresados", unidad: "cantidad" },
       { id: "reclamos_res", label: "Reclamos resueltos", unidad: "cantidad" },
-      { id: "luminarias", label: "Luminarias repuestas o reparadas", unidad: "cantidad" }
+      { id: "viajes_vertedero", label: "Viajes al vertedero municipal", unidad: "cantidad" },
+      { id: "cuadras_motoniveladora", label: "Cuadras intervenidas con motoniveladora", unidad: "cantidad" },
+      { id: "camiones_tierra", label: "Camiones de tierra entregados", unidad: "cantidad" }
     ]
   },
   "obr-catastro": {
