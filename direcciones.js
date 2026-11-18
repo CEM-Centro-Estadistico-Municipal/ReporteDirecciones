@@ -129,8 +129,9 @@ const CATALOGO = {
   "hac-tesoreria": {
     sec: "Hacienda y Finanzas", dir: "Tesorería Municipal",
     indicadores: [
-      { id: "ing_caja_propia", label: "Total de ingresos en caja propia", unidad: "pesos" },
-      { id: "ing_cajas_externas", label: "Total de ingresos en cajas externas", unidad: "pesos" }
+      { id: "pct_presupuesto_cobrado",
+        label: "% del presupuesto total cobrado en la quincena",
+        unidad: "porcentaje" }
     ]
   },
   "hac-contabilidad": {
