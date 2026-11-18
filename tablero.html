@@ -713,6 +713,9 @@ td.cel{text-align:center}
   background:#fff; border:1px solid var(--ink-200); border-radius:var(--r);
   overflow:auto; box-shadow:var(--sh); margin-bottom:14px;
 }
+.ind-nada{display:inline-block;margin-left:7px;background:#fdf4ec;color:#b4541f;
+  border-radius:99px;padding:2px 9px;font-size:11px;font-weight:700;
+  letter-spacing:.02em;vertical-align:1px}
 .ind-sec{
   font-family:var(--f-head); font-weight:900; font-size:11px; letter-spacing:.14em;
   text-transform:uppercase; color:var(--brand-700); margin:20px 0 8px;
@@ -1822,7 +1825,9 @@ function pintarIndicadores(){
     return `<div class="ind-area">
       <div class="ind-cab">
         <div class="ind-dir">${esc(a.dir)}</div>
-        <div class="ind-sec">${esc(a.sec)}</div>
+        <div class="ind-sec">${esc(a.sec)}${
+          a.series.every(s => s.sinDatos)
+            ? ` <span class="ind-nada">reportó sin cargar indicadores</span>` : ""}</div>
       </div>
       <div class="ind-scroll"><table class="ind-tabla">
         <thead><tr><th>Indicador</th>
